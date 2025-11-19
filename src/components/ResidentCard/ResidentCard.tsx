@@ -22,10 +22,13 @@ function ResidentCard({
         </div>
       )}
       <h2>{resident.name}</h2>
-      <p className="role">{resident.role}</p>
-      <p>{resident.description}</p>
+      <p className="business">{resident.business}</p>
+      <p className="catchphrase">{resident.catchphrase}</p>
+      <p className="city">📍 {resident.city}</p>
+      <p className="company">🏢 {resident.company}</p>
+      <p className="email">{resident.email}</p>
       {onFavorite && (
-        <button onClick={handleClick}>
+        <button type="button" onClick={handleClick}>
           {isFavorite ? "⭐ Remove from Favorites" : "☆ Add to Favorites"}
         </button>
       )}

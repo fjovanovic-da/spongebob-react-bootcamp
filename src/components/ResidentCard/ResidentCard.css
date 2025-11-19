@@ -42,23 +42,58 @@
   color: #2d3748;
   font-size: 1.5rem;
   font-weight: 700;
-  margin: 0.5rem 0;
+  margin: 0.5rem 0 0.5rem 0;
   text-align: left;
   width: 100%;
 }
 
-.resident-card .role {
+.resident-card .business {
   color: #6366f1;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin: 0.25rem 0;
+  margin: 0 0 0.5rem 0;
   text-align: left;
   width: 100%;
 }
 
-.resident-card > p:not(.role) {
+.resident-card .catchphrase {
+  color: #718096;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 0 0 0.75rem 0;
+  text-align: left;
+  width: 100%;
+}
+
+.resident-card .city {
+  color: #4a5568;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+  text-align: left;
+  width: 100%;
+}
+
+.resident-card .company {
+  color: #4a5568;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+  text-align: left;
+  width: 100%;
+}
+
+.resident-card .email {
+  color: #718096;
+  font-size: 0.85rem;
+  margin: 0 0 1.5rem 0;
+  text-align: left;
+  width: 100%;
+}
+
+.resident-card > p:not(.business):not(.catchphrase):not(.city):not(.company):not(.email) {
   color: #4a5568;
   font-size: 0.95rem;
   line-height: 1.6;

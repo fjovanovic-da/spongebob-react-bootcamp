@@ -1,9 +1,12 @@
 export interface Resident {
     id: string;
     name: string;
-    role: string;
-    description: string;
-    imageUrl: string;
+    email: string;
+    city: string;
+    company: string;
+    catchphrase: string;
+    business: string;
+    imageUrl?: string;
     emoji?: string;
 }
 
