@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import type { Resident, User, UseResidentsReturn } from "../types";
+import { useCallback, useEffect, useState } from "react";
+import type { Resident, UseResidentsReturn, User } from "../types";
 
 const DEFAULT_ENDPOINT = "https://jsonplaceholder.typicode.com/users";
 
@@ -19,6 +19,7 @@ export function useResidents(endpoint: string = DEFAULT_ENDPOINT): UseResidentsR
         setRefetchTrigger((prev) => prev + 1);
     }, []);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: refetchTrigger is intentionally excluded from dependencies
     useEffect(() => {
         let isMounted = true;
 

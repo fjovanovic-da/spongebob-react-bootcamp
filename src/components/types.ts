@@ -46,3 +46,11 @@ export interface UseFavoritesReturn {
     favoriteCount: number;
     clearFavorites: () => void;
 }
+
+export interface UseResidentFilterReturn {
+    filteredResidents: Resident[];
+    searchText: string;
+    roleFilter: string;
+    setSearchText: (text: string) => void;
+    setRoleFilter: (role: string) => void;
+}
