@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
+import type { UseFavoritesReturn } from "../types";
 
-export function useFavorites(storageKey = "favorites") {
+const DEFAULT_STORAGE_KEY = "favorites";
+
+/**
+ * Custom hook to manage favorite residents with localStorage persistence
+ * @param storageKey - Optional localStorage key override
+ * @returns Object containing favorites array, toggle function, check function, count, and clear function
+ */
+export function useFavorites(storageKey: string = DEFAULT_STORAGE_KEY): UseFavoritesReturn {
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
       const storedFavorites = localStorage.getItem(storageKey);
@@ -26,15 +34,20 @@ export function useFavorites(storageKey = "favorites") {
     );
   }, []);
 
-  const isFavorite = useCallback((id: string) => {
-    return favorites.includes(id);
-  }, [favorites]);
+  const isFavorite = useCallback(
+    (id: string) => favorites.includes(id),
+    [favorites]
+  );
+
+  const clearFavorites = useCallback(() => {
+    setFavorites([]);
+  }, []);
 
   return {
     favorites,
     toggleFavorite,
     isFavorite,
     favoriteCount: favorites.length,
-    clearFavorites: () => setFavorites([]),
+    clearFavorites,
   };
 }

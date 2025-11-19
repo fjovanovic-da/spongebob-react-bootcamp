@@ -1,0 +1,72 @@
+import { useEffect, useState, useCallback } from "react";
+import type { Resident, User, UseResidentsReturn } from "../types";
+
+const DEFAULT_ENDPOINT = "https://jsonplaceholder.typicode.com/users";
+
+/**
+ * Custom hook to fetch and manage residents data
+ * @param endpoint - Optional API endpoint override
+ * @returns Object containing residents, loading, error states and refetch function
+ */
+export function useResidents(endpoint: string = DEFAULT_ENDPOINT): UseResidentsReturn {
+    const [residents, setResidents] = useState<Resident[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [refetchTrigger, setRefetchTrigger] = useState(0);
+
+    // Refetch function that can be called to reload data
+    const refetch = useCallback(() => {
+        setRefetchTrigger((prev) => prev + 1);
+    }, []);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const fetchResidents = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                const response = await fetch(endpoint);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const users: User[] = await response.json();
+
+                if (isMounted) {
+                    // Transform API users into our Resident format
+                    const transformedResidents: Resident[] = users.map((user) => ({
+                        id: user.id.toString(),
+                        name: user.name,
+                        email: user.email,
+                        city: user.address.city,
+                        company: user.company.name,
+                        catchphrase: user.company.catchPhrase,
+                        business: user.company.bs,
+                        emoji: "🧑",
+                    }));
+
+                    setResidents(transformedResidents);
+                    setLoading(false);
+                }
+            } catch (err) {
+                if (isMounted) {
+                    setError(
+                        err instanceof Error ? err.message : "Failed to fetch residents"
+                    );
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchResidents();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [endpoint, refetchTrigger]);
+
+    return { residents, loading, error, refetch };
+}
