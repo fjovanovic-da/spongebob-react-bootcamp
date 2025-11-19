@@ -1,7 +1,7 @@
-import ResidentCard from "../ResidentCard/ResidentCard";
+import "./WelcomeBoard.css";
 import { useFavorites } from "../hooks/useFavorites";
 import { useResidents } from "../hooks/useResidents";
-import "./WelcomeBoard.css";
+import ResidentCard from "../ResidentCard/ResidentCard";
 
 function WelcomeBoard() {
   // Use the custom residents hook
@@ -32,6 +32,12 @@ function WelcomeBoard() {
       {/* Show residents grid when data is loaded and no error */}
       {!loading && !error && (
         <>
+          {favoriteCount > 0 && (
+            <div className="favorites-footer">
+              You have {favoriteCount} favorite
+              {favoriteCount > 1 ? "s" : ""}! ⭐
+            </div>
+          )}
           <div className="residents-grid">
             {residents.map((resident) => (
               <ResidentCard
@@ -42,12 +48,6 @@ function WelcomeBoard() {
               />
             ))}
           </div>
-          {favoriteCount > 0 && (
-            <div className="favorites-footer">
-              You have {favoriteCount} favorite
-              {favoriteCount > 1 ? "s" : ""}! ⭐
-            </div>
-          )}
         </>
       )}
     </div>
