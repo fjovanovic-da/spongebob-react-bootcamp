@@ -54,3 +54,10 @@ export interface UseResidentFilterReturn {
     setSearchText: (text: string) => void;
     setRoleFilter: (role: string) => void;
 }
+
+export interface FilterContextType {
+    searchText: string;
+    roleFilter: string;
+    setSearchText: (text: string) => void;
+    setRoleFilter: (role: string) => void;
+}

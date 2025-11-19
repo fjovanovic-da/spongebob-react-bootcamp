@@ -1,11 +1,14 @@
 import "./App.css";
+import { FilterProvider } from "./components/contexts/FilterContext";
 import WelcomeBoard from "./components/WelcomeBoard/WelcomeBoard";
 
 function App() {
   return (
-    <div className="App">
-      <WelcomeBoard />
-    </div>
+    <FilterProvider>
+      <div className="App">
+        <WelcomeBoard />
+      </div>
+    </FilterProvider>
   );
 }
 

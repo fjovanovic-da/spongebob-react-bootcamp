@@ -1,5 +1,7 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useFilterContext } from "../contexts/FilterContext";
 import type { Resident, UseResidentFilterReturn } from "../types";
+import { useDebounce } from "./useDebounce";
 
 /**
  * Custom hook to filter residents by search text and role
@@ -7,27 +9,30 @@ import type { Resident, UseResidentFilterReturn } from "../types";
  * @returns Object containing filtered residents, filter states, and setters
  */
 export function useResidentFilter(residents: Resident[]): UseResidentFilterReturn {
-    const [searchText, setSearchText] = useState("");
-    const [roleFilter, setRoleFilter] = useState("");
+    const { searchText, roleFilter, setSearchText, setRoleFilter } = useFilterContext();
+
+    // Debounce both search text and role filter
+    const debouncedSearchText = useDebounce(searchText, 300);
+    const debouncedRoleFilter = useDebounce(roleFilter, 300);
 
     const filteredResidents = useMemo(() => {
         return residents.filter((resident) => {
             // Filter by search text (name, city, email)
             const matchesSearch =
-                searchText === "" ||
-                resident.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                resident.city.toLowerCase().includes(searchText.toLowerCase()) ||
-                resident.email.toLowerCase().includes(searchText.toLowerCase());
+                debouncedSearchText === "" ||
+                resident.name.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
+                resident.city.toLowerCase().includes(debouncedSearchText.toLowerCase()) ||
+                resident.email.toLowerCase().includes(debouncedSearchText.toLowerCase());
 
             // Filter by role (company,business)
             const matchesRole =
-                roleFilter === "" ||
-                resident.company.toLowerCase().includes(roleFilter.toLowerCase()) ||
-                resident.business.toLowerCase().includes(roleFilter.toLowerCase());
+                debouncedRoleFilter === "" ||
+                resident.company.toLowerCase().includes(debouncedRoleFilter.toLowerCase()) ||
+                resident.business.toLowerCase().includes(debouncedRoleFilter.toLowerCase());
 
             return matchesSearch && matchesRole;
         });
-    }, [residents, searchText, roleFilter]);
+    }, [residents, debouncedSearchText, debouncedRoleFilter]);
 
     return {
         filteredResidents,
