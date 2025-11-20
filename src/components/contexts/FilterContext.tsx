@@ -39,7 +39,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ searchText, roleFilter })
+        JSON.stringify({ searchText, roleFilter }),
       );
     } catch {
       // Ignore errors

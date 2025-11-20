@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Resident, UseResidentsReturn, User } from "../types";
+import { httpClient } from "../../api";
+import type { Resident, UseResidentsReturn } from "../types";
 
 const DEFAULT_ENDPOINT = "https://jsonplaceholder.typicode.com/users";
 
@@ -8,7 +9,9 @@ const DEFAULT_ENDPOINT = "https://jsonplaceholder.typicode.com/users";
  * @param endpoint - Optional API endpoint override
  * @returns Object containing residents, loading, error states and refetch function
  */
-export function useResidents(endpoint: string = DEFAULT_ENDPOINT): UseResidentsReturn {
+export function useResidents(
+    endpoint: string = DEFAULT_ENDPOINT,
+): UseResidentsReturn {
     const [residents, setResidents] = useState<Resident[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -28,13 +31,7 @@ export function useResidents(endpoint: string = DEFAULT_ENDPOINT): UseResidentsR
                 setLoading(true);
                 setError(null);
 
-                const response = await fetch(endpoint);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const users: User[] = await response.json();
+                const users = await httpClient.getUsers(endpoint);
 
                 if (isMounted) {
                     // Transform API users into our Resident format
@@ -55,7 +52,7 @@ export function useResidents(endpoint: string = DEFAULT_ENDPOINT): UseResidentsR
             } catch (err) {
                 if (isMounted) {
                     setError(
-                        err instanceof Error ? err.message : "Failed to fetch residents"
+                        err instanceof Error ? err.message : "Failed to fetch residents",
                     );
                     setLoading(false);
                 }

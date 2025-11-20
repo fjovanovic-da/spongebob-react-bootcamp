@@ -8,7 +8,9 @@ const DEFAULT_STORAGE_KEY = "favorites";
  * @param storageKey - Optional localStorage key override
  * @returns Object containing favorites array, toggle function, check function, count, and clear function
  */
-export function useFavorites(storageKey: string = DEFAULT_STORAGE_KEY): UseFavoritesReturn {
+export function useFavorites(
+  storageKey: string = DEFAULT_STORAGE_KEY,
+): UseFavoritesReturn {
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
       const storedFavorites = localStorage.getItem(storageKey);
@@ -30,13 +32,13 @@ export function useFavorites(storageKey: string = DEFAULT_STORAGE_KEY): UseFavor
     setFavorites((prevFavorites) =>
       prevFavorites.includes(id)
         ? prevFavorites.filter((favId) => favId !== id)
-        : [...prevFavorites, id]
+        : [...prevFavorites, id],
     );
   }, []);
 
   const isFavorite = useCallback(
     (id: string) => favorites.includes(id),
-    [favorites]
+    [favorites],
   );
 
   const clearFavorites = useCallback(() => {
