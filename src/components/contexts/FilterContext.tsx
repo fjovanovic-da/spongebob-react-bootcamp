@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
+import { STORAGE_KEY } from "../../config";
 import type { FilterContextType } from "../types";
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
-
-const STORAGE_KEY = "resident-filters";
 
 export function FilterProvider({ children }: { children: ReactNode }) {
   // Initialize from localStorage
@@ -39,7 +38,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ searchText, roleFilter }),
+        JSON.stringify({ searchText, roleFilter })
       );
     } catch {
       // Ignore errors

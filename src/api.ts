@@ -4,8 +4,7 @@
 
 import axios from "axios";
 import type { User } from "./components/types";
-
-const DEFAULT_TIMEOUT = 10000; // 10 seconds
+import { DEFAULT_TIMEOUT } from "./config";
 
 class HttpClient {
   /**

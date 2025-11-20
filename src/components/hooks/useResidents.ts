@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { httpClient } from "../../api";
+import { DEFAULT_ENDPOINT } from "../../config";
 import type { Resident, UseResidentsReturn } from "../types";
-
-const DEFAULT_ENDPOINT = "https://jsonplaceholder.typicode.com/users";
 
 /**
  * Custom hook to fetch and manage residents data

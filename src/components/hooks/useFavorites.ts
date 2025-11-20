@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { DEFAULT_STORAGE_KEY } from "../../config";
 import type { UseFavoritesReturn } from "../types";
-
-const DEFAULT_STORAGE_KEY = "favorites";
 
 /**
  * Custom hook to manage favorite residents with localStorage persistence
