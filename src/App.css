@@ -1,8 +1,12 @@
 #root {
-  max-width: 1280px;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 .logo {
@@ -38,5 +42,5 @@
 }
 
 .read-the-docs {
-  color: #888;
+  color: var(--text-light);
 }
