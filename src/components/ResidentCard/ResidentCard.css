@@ -1,19 +1,20 @@
 .resident-card {
-  background: white;
-  border-radius: 16px;
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
   padding: 0.5rem 1.5rem 1.5rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
-  border: 2px solid #e2e8f0;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast), border var(--transition-fast);
+  border: 2px solid var(--border-medium);
 }
 
 .resident-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  border: 2px solid #667eea;
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--color-secondary);
 }
 
 .resident-card img {
@@ -21,8 +22,8 @@
   height: 120px;
   object-fit: contain;
   margin: 1.5rem 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
+  background: var(--bg-gradient);
+  border-radius: var(--radius-md);
   padding: 2rem;
 }
 
@@ -33,13 +34,13 @@
   align-items: center;
   justify-content: center;
   margin: 1.5rem 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
+  background: var(--bg-gradient);
+  border-radius: var(--radius-md);
   font-size: 5rem;
 }
 
 .resident-card h2 {
-  color: #2d3748;
+  color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0.5rem 0 0.5rem 0;
@@ -48,7 +49,7 @@
 }
 
 .resident-card .business {
-  color: #6366f1;
+  color: var(--color-primary);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -59,7 +60,7 @@
 }
 
 .resident-card .catchphrase {
-  color: #718096;
+  color: var(--text-tertiary);
   font-size: 0.9rem;
   font-style: italic;
   margin: 0 0 0.75rem 0;
@@ -68,7 +69,7 @@
 }
 
 .resident-card .city {
-  color: #4a5568;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   font-weight: 500;
   margin: 0 0 0.5rem 0;
@@ -77,7 +78,7 @@
 }
 
 .resident-card .company {
-  color: #4a5568;
+  color: var(--text-secondary);
   font-size: 0.95rem;
   font-weight: 500;
   margin: 0 0 0.5rem 0;
@@ -86,15 +87,16 @@
 }
 
 .resident-card .email {
-  color: #718096;
+  color: var(--text-tertiary);
   font-size: 0.85rem;
   margin: 0 0 1.5rem 0;
   text-align: left;
   width: 100%;
 }
 
-.resident-card > p:not(.business):not(.catchphrase):not(.city):not(.company):not(.email) {
-  color: #4a5568;
+.resident-card
+  > p:not(.business):not(.catchphrase):not(.city):not(.company):not(.email) {
+  color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.6;
   margin: 0.75rem 0 1.5rem 0;
@@ -103,18 +105,18 @@
 }
 
 .resident-card button {
-  background: #6366f1;
-  color: white;
+  background: var(--color-primary);
+  color: var(--text-white);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
-  transition: background 0.2s ease;
+  transition: background var(--transition-fast);
 }
 
 .resident-card button:hover {
-  background: #4f46e5;
+  background: var(--color-primary-dark);
 }
