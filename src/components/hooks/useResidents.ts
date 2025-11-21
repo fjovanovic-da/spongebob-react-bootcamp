@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { httpClient } from "../../api";
 import { DEFAULT_ENDPOINT } from "../../config";
-import type { Resident, UseResidentsReturn } from "../types";
+import type { Resident, UseResidentsReturn } from "../../types";
 
 /**
  * Custom hook to fetch and manage residents data

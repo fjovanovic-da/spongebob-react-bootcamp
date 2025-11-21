@@ -1,5 +1,5 @@
 import "./WelcomeBoard.css";
-import { useFavorites } from "../hooks/useFavorites";
+import { useFavoritesStore } from "../../stores/useFavoritesStore";
 import { useResidentFilter } from "../hooks/useResidentFilter";
 import { useResidents } from "../hooks/useResidents";
 import ResidentCard from "../ResidentCard/ResidentCard";
@@ -7,8 +7,8 @@ import ResidentCard from "../ResidentCard/ResidentCard";
 function WelcomeBoard() {
   // Use the custom residents hook
   const { residents, loading, error } = useResidents();
-  // Use the custom favorites hook
-  const { toggleFavorite, isFavorite, favoriteCount } = useFavorites();
+  // Use the Zustand favorites store
+  const { toggleFavorite, isFavorite, favoriteCount } = useFavoritesStore();
   // Use the custom filter hook
   const {
     filteredResidents,

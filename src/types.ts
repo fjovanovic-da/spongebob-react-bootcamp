@@ -39,14 +39,6 @@ export interface UseResidentsReturn {
   refetch: () => void;
 }
 
-export interface UseFavoritesReturn {
-  favorites: string[];
-  toggleFavorite: (id: string) => void;
-  isFavorite: (id: string) => boolean;
-  favoriteCount: number;
-  clearFavorites: () => void;
-}
-
 export interface UseResidentFilterReturn {
   filteredResidents: Resident[];
   searchText: string;
@@ -55,9 +47,17 @@ export interface UseResidentFilterReturn {
   setRoleFilter: (role: string) => void;
 }
 
-export interface FilterContextType {
+export interface FilterState {
   searchText: string;
   roleFilter: string;
   setSearchText: (text: string) => void;
   setRoleFilter: (role: string) => void;
+}
+
+export interface FavoritesState {
+  favorites: string[];
+  toggleFavorite: (id: string) => void;
+  isFavorite: (id: string) => boolean;
+  favoriteCount: number;
+  clearFavorites: () => void;
 }

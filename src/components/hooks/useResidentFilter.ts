@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useFilterContext } from "../contexts/FilterContext";
-import type { Resident, UseResidentFilterReturn } from "../types";
+import { useFilterStore } from "../../stores/useFilterStore";
+import type { Resident, UseResidentFilterReturn } from "../../types";
 import { useDebounce } from "./useDebounce";
 
 /**
@@ -12,7 +12,7 @@ export function useResidentFilter(
   residents: Resident[],
 ): UseResidentFilterReturn {
   const { searchText, roleFilter, setSearchText, setRoleFilter } =
-    useFilterContext();
+    useFilterStore();
 
   // Debounce both search text and role filter
   const debouncedSearchText = useDebounce(searchText, 300);
