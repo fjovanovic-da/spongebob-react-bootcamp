@@ -19,12 +19,12 @@ function WelcomeBoard() {
 
   // Style classes
   const containerClasses =
-    "max-w-7xl mx-auto p-8 bg-white rounded-3xl shadow-2xl";
+    "welcome-board-container max-w-7xl mx-auto p-8 rounded-3xl shadow-2xl bg-base-200";
   const headingClasses =
-    "text-4xl font-bold text-center mb-2 flex items-center justify-center gap-2 text-black";
-  const subtitleClasses = "text-center text-lg mb-4 text-black/70";
+    "text-4xl font-bold text-center mb-2 flex items-center justify-center gap-2 text-base-content";
+  const subtitleClasses = "text-center text-lg mb-4 text-base-content";
   const filterInputClasses =
-    "input flex-1 min-w-[200px] h-10 bg-white text-black border-2 border-gray-200 px-4 rounded focus:outline-none focus:border-indigo-500 transition-colors";
+    "input flex-1 min-w-[200px] h-10 bg-base-100 text-base-content border-2 border-base-300 px-4 rounded focus:outline-none focus:border-primary transition-colors";
 
   return (
     <div className={containerClasses}>
@@ -85,7 +85,7 @@ function WelcomeBoard() {
       {!loading && !error && (
         <>
           {favoriteCount > 0 && (
-            <div className="w-full bg-blue-100 text-indigo-600 py-3 px-4 mb-8 rounded text-center font-semibold">
+            <div className="w-full bg-accent text-info-content py-3 px-4 mb-8 rounded text-center font-semibold">
               You have {favoriteCount} favorite
               {favoriteCount > 1 ? "s" : ""}! ⭐
             </div>
@@ -101,7 +101,7 @@ function WelcomeBoard() {
                 />
               ))
             ) : (
-              <div className="col-span-full text-center text-lg py-8 text-black/60">
+              <div className="col-span-full text-center text-lg py-8 text-base-content">
                 No residents found matching your filters.
               </div>
             )}

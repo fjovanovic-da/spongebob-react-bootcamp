@@ -1,22 +1,12 @@
-body {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  font-family: system-ui, -apple-system, sans-serif;
-  box-sizing: border-box;
-}
+/** biome-ignore-all lint/suspicious/noUnknownAtRules: Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 #root {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
   min-height: 100vh;
 }
