@@ -61,3 +61,31 @@ export interface FavoritesState {
   favoriteCount: number;
   clearFavorites: () => void;
 }
+
+export interface WelcomeBoardProps {
+  residents: Resident[];
+  loading: boolean;
+  error: string | null;
+}
+
+export interface ResidentFilterProps {
+  searchText: string;
+  roleFilter: string;
+  onSearchChange: (text: string) => void;
+  onRoleChange: (role: string) => void;
+}
+
+export interface ResidentListProps {
+  residents: Resident[];
+  loading: boolean;
+  error: string | null;
+  emptyMessage?: string;
+  showFavoriteCount?: boolean;
+}
+
+export interface FavoritesBoardProps {
+  residents: Resident[];
+  loading: boolean;
+  error: string | null;
+}
+

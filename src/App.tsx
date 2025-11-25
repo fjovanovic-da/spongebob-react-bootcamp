@@ -1,13 +1,16 @@
 import "./App.css";
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Sidebar from "./components/Sidebar/Sidebar";
-import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
-import WelcomeBoard from "./components/WelcomeBoard/WelcomeBoard";
+import Sidebar from "./components/Sidebar";
+import ThemeToggle from "./components/ThemeToggle";
+import { useResidents } from "./hooks/useResidents";
+import FavoritesBoard from "./pages/FavoritesBoard";
+import WelcomeBoard from "./pages/WelcomeBoard";
 import { useThemeStore } from "./stores/useThemeStore";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
+  const { residents, loading, error } = useResidents();
 
   // Apply theme to html element
   useEffect(() => {
@@ -54,7 +57,26 @@ function App() {
         {/* Page content */}
         <main className="flex-1 overflow-y-auto p-6">
           <Routes>
-            <Route path="/" element={<WelcomeBoard />} />
+            <Route
+              path="/"
+              element={
+                <WelcomeBoard
+                  residents={residents}
+                  loading={loading}
+                  error={error}
+                />
+              }
+            />
+            <Route
+              path="/favorites"
+              element={
+                <FavoritesBoard
+                  residents={residents}
+                  loading={loading}
+                  error={error}
+                />
+              }
+            />
             {/* Add more routes here as needed */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
