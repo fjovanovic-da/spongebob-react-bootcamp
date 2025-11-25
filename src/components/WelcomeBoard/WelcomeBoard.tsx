@@ -85,12 +85,19 @@ function WelcomeBoard() {
       {!loading && !error && (
         <>
           {favoriteCount > 0 && (
-            <div className="w-full bg-accent text-info-content py-3 px-4 mb-8 rounded text-center font-semibold">
+            <div className="w-full bg-accent text-primary-content py-3 px-4 mb-8 rounded text-center font-semibold">
               You have {favoriteCount} favorite
               {favoriteCount > 1 ? "s" : ""}! ⭐
             </div>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8 min-h-[300px]">
+          <div
+            className="mb-8 min-h-[300px]"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: "2rem",
+            }}
+          >
             {filteredResidents.length > 0 ? (
               filteredResidents.map((resident) => (
                 <ResidentCard

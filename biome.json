@@ -19,5 +19,10 @@
       },
       "a11y": { "noAutofocus": "warn" }
     }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
   }
 }

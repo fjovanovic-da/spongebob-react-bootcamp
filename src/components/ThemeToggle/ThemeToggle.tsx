@@ -2,7 +2,7 @@ import { useThemeStore } from "../../stores/useThemeStore";
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useThemeStore();
-  const isDark = theme === "dark";
+  const isDark = theme === "aqua";
 
   return (
     <button
