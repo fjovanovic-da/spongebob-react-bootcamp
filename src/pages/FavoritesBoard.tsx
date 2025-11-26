@@ -1,5 +1,5 @@
-import ResidentFilter from "../components/ResidentFilter";
-import ResidentList from "../components/ResidentList";
+import ResidentFilter from "../components/Resident/ResidentFilter";
+import ResidentList from "../components/Resident/ResidentList";
 import { useResidentFilter } from "../hooks/useResidentFilter";
 import { useFavoritesStore } from "../stores/useFavoritesStore";
 import type { FavoritesBoardProps } from "../types";

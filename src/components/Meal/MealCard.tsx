@@ -1,4 +1,4 @@
-import type { MealCardProps } from "../types";
+import type { MealCardProps } from "../../types";
 
 function MealCard({ meal }: MealCardProps) {
   const cardClasses =

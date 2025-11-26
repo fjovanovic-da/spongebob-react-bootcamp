@@ -1,4 +1,4 @@
-import type { MealFilterProps } from "../types";
+import type { MealFilterProps } from "../../types";
 
 function MealFilter({
   searchText,

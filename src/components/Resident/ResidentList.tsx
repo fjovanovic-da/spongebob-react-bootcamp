@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useFavoritesStore } from "../stores/useFavoritesStore";
-import type { ResidentListProps } from "../types";
-import Pagination from "./Pagination";
+import { useFavoritesStore } from "../../stores/useFavoritesStore";
+import type { ResidentListProps } from "../../types";
+import Pagination from "../Pagination";
 import ResidentCard from "./ResidentCard";
 
 const ITEMS_PER_PAGE = 9;

@@ -1,5 +1,5 @@
-import MealFilter from "../components/MealFilter";
-import MealList from "../components/MealList";
+import MealFilter from "../components/Meal/MealFilter";
+import MealList from "../components/Meal/MealList";
 import { useMealFilter } from "../hooks/useMealFilter";
 import { useMeals } from "../hooks/useMeals";
 
