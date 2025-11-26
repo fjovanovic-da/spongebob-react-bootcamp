@@ -1,13 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-type Theme = 'cupcake' | 'aqua';
-
-interface ThemeState {
-    theme: Theme;
-    toggleTheme: () => void;
-    setTheme: (theme: Theme) => void;
-}
+import type { ThemeState } from '../types';
 
 export const useThemeStore = create<ThemeState>()(
     persist(

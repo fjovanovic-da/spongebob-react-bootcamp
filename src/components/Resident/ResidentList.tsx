@@ -3,8 +3,7 @@ import { useFavoritesStore } from "../../stores/useFavoritesStore";
 import type { ResidentListProps } from "../../types";
 import Pagination from "../Pagination";
 import ResidentCard from "./ResidentCard";
-
-const ITEMS_PER_PAGE = 9;
+import { ITEMS_PER_PAGE } from "../../config";
 
 function ResidentList({
   residents,
