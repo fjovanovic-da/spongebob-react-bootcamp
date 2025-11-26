@@ -1,4 +1,4 @@
-import type { ResidentCardProps } from "../types";
+import type { ResidentCardProps } from "../../types";
 
 function ResidentCard({
   resident,

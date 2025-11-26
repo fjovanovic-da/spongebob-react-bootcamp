@@ -1,4 +1,4 @@
-import type { ResidentFilterProps } from "../types";
+import type { ResidentFilterProps } from "../../types";
 
 function ResidentFilter({
   searchText,
