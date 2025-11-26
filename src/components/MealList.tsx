@@ -1,45 +1,41 @@
 import { useEffect, useState } from "react";
-import { useFavoritesStore } from "../stores/useFavoritesStore";
-import type { ResidentListProps } from "../types";
+import type { MealListProps } from "../types";
+import MealCard from "./MealCard";
 import Pagination from "./Pagination";
-import ResidentCard from "./ResidentCard";
 
 const ITEMS_PER_PAGE = 9;
 
-function ResidentList({
-  residents,
+function MealList({
+  meals,
   loading,
   error,
-  emptyMessage = "No residents found matching your filters.",
-  showFavoriteCount = false,
-}: ResidentListProps) {
-  const { toggleFavorite, isFavorite, favoriteCount } = useFavoritesStore();
+  emptyMessage = "No meals found.",
+}: MealListProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate pagination
-  const totalPages = Math.ceil(residents.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(meals.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentResidents = residents.slice(startIndex, endIndex);
+  const currentMeals = meals.slice(startIndex, endIndex);
 
-  // Reset to page 1 when residents change
+  // Reset to page 1 when meals change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Reset page when residents list changes
+  // Reset page when meals list changes
   // biome-ignore lint/correctness/useExhaustiveDependencies: Only reset when count changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [residents.length]);
-
+  }, [meals.length]);
   // Show loading state while fetching data
   if (loading) {
     return (
       <div className="alert alert-info my-8">
         <span className="loading loading-spinner loading-md"></span>
-        <span className="text-lg font-semibold">Loading residents... 🌊</span>
+        <span className="text-lg font-semibold">Loading meals... 🍔</span>
       </div>
     );
   }
@@ -70,15 +66,9 @@ function ResidentList({
     );
   }
 
-  // Show residents grid when data is loaded and no error
+  // Show meals grid when data is loaded and no error
   return (
     <>
-      {showFavoriteCount && favoriteCount > 0 && (
-        <div className="w-full bg-accent text-primary-content py-3 px-4 mb-8 rounded text-center font-semibold">
-          You have {favoriteCount} favorite
-          {favoriteCount > 1 ? "s" : ""}! ⭐
-        </div>
-      )}
       <div
         className="mb-8 min-h-[300px]"
         style={{
@@ -87,15 +77,8 @@ function ResidentList({
           gap: "2rem",
         }}
       >
-        {residents.length > 0 ? (
-          currentResidents.map((resident) => (
-            <ResidentCard
-              key={resident.id}
-              resident={resident}
-              onFavorite={toggleFavorite}
-              isFavorite={isFavorite(resident.id)}
-            />
-          ))
+        {meals.length > 0 ? (
+          currentMeals.map((meal) => <MealCard key={meal.id} meal={meal} />)
         ) : (
           <div className="col-span-full text-center text-lg py-8 text-base-content">
             {emptyMessage}
@@ -103,17 +86,17 @@ function ResidentList({
         )}
       </div>
 
-      {residents.length > 0 && (
+      {meals.length > 0 && (
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
           itemsPerPage={ITEMS_PER_PAGE}
-          totalItems={residents.length}
+          totalItems={meals.length}
         />
       )}
     </>
   );
 }
 
-export default ResidentList;
+export default MealList;

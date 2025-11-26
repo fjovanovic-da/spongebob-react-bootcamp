@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import ThemeToggle from "./components/ThemeToggle";
 import { useResidents } from "./hooks/useResidents";
 import FavoritesBoard from "./pages/FavoritesBoard";
+import MenuBoard from "./pages/MenuBoard";
 import WelcomeBoard from "./pages/WelcomeBoard";
 import { useThemeStore } from "./stores/useThemeStore";
 
@@ -67,6 +68,7 @@ function App() {
                 />
               }
             />
+            <Route path="/menu" element={<MenuBoard />} />
             <Route
               path="/favorites"
               element={
