@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import type { MealListProps } from "../../types";
-import MealCard from "./MealCard";
-import Pagination from "../Pagination";
 import { ITEMS_PER_PAGE } from "../../config";
+import type { MealListProps } from "../../types";
+import Pagination from "../Pagination";
+import MealCard from "./MealCard";
 
 function MealList({
   meals,

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
+import { ITEMS_PER_PAGE } from "../../config";
 import { useFavoritesStore } from "../../stores/useFavoritesStore";
 import type { ResidentListProps } from "../../types";
 import Pagination from "../Pagination";
 import ResidentCard from "./ResidentCard";
-import { ITEMS_PER_PAGE } from "../../config";
 
 function ResidentList({
   residents,
