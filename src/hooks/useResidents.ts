@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { httpClient } from "../../api";
-import { DEFAULT_ENDPOINT } from "../../config";
+import { httpClient } from "../api";
+import { DEFAULT_ENDPOINT } from "../config";
 import type { Resident, UseResidentsReturn } from "../types";
 
 /**
