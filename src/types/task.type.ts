@@ -4,7 +4,7 @@ export interface Task {
     id: string;
     name: string;
     description?: string;
-    dateCreated: Date;
+    date: Date;
     dateFinished?: Date;
 }
 
@@ -19,7 +19,7 @@ export interface RawTask {
     id: string;
     name: string;
     description?: string;
-    dateCreated: string;
+    date: string;
     dateFinished?: string;
 }
 
@@ -36,5 +36,5 @@ export interface TaskTableProps {
 export interface AddTaskModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (name: string, description: string) => void;
+    onSubmit: (name: string, description: string, date: Date) => void;
 }

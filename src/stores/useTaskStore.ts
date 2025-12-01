@@ -9,7 +9,7 @@ const persistOptions = {
         if (parsed.state?.tasks) {
             parsed.state.tasks = parsed.state.tasks.map((task: RawTask) => ({
                 ...task,
-                dateCreated: new Date(task.dateCreated),
+                date: new Date(task.date),
                 dateFinished: task.dateFinished ? new Date(task.dateFinished) : undefined,
             } as Task));
         }

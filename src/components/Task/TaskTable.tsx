@@ -78,10 +78,10 @@ function TaskTable({
               <th>Description</th>
               <th
                 className="cursor-pointer"
-                onClick={() => onSort(TASK_SORT_KEYS.DATE_CREATED)}
+                onClick={() => onSort(TASK_SORT_KEYS.DATE)}
               >
-                Created{" "}
-                {sortKey === TASK_SORT_KEYS.DATE_CREATED &&
+                Date{" "}
+                {sortKey === TASK_SORT_KEYS.DATE &&
                   (sortDirection === SORT_DIRECTIONS.ASC ? "↑" : "↓")}
               </th>
               <th
@@ -133,7 +133,7 @@ function TaskTable({
                     task.description || ""
                   )}
                 </td>
-                <td>{new Date(task.dateCreated).toLocaleDateString()}</td>
+                <td>{new Date(task.date).toLocaleDateString()}</td>
                 <td>
                   {task.dateFinished
                     ? new Date(task.dateFinished).toLocaleDateString()
@@ -231,8 +231,8 @@ function TaskTable({
                   )}
                 </p>
                 <p>
-                  <strong>Created:</strong>{" "}
-                  {new Date(task.dateCreated).toLocaleDateString()}
+                  <strong>Date:</strong>{" "}
+                  {new Date(task.date).toLocaleDateString()}
                 </p>
                 <p>
                   <strong>Finished:</strong>{" "}

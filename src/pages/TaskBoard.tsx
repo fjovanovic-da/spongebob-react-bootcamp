@@ -12,9 +12,7 @@ import type { Task } from "../types/task.type";
 
 function TaskBoard() {
   const { tasks, updateTask, addTask, removeTask } = useTaskStore();
-  const [sortKey, setSortKey] = useState<TaskSortKey>(
-    TASK_SORT_KEYS.DATE_CREATED
-  );
+  const [sortKey, setSortKey] = useState<TaskSortKey>(TASK_SORT_KEYS.DATE);
   const [sortDirection, setSortDirection] = useState<SortDirection>(
     SORT_DIRECTIONS.ASC
   );
@@ -45,12 +43,12 @@ function TaskBoard() {
     removeTask(id);
   };
 
-  const handleAddTask = (name: string, description: string) => {
+  const handleAddTask = (name: string, description: string, date: Date) => {
     addTask({
       id: Date.now().toString(),
       name,
       description: description || undefined,
-      dateCreated: new Date(),
+      date,
     });
   };
 
@@ -63,14 +61,14 @@ function TaskBoard() {
       return sortDirection === SORT_DIRECTIONS.ASC ? aVal : -aVal;
     } else {
       aVal =
-        sortKey === TASK_SORT_KEYS.DATE_CREATED
-          ? new Date(a.dateCreated).getTime()
+        sortKey === TASK_SORT_KEYS.DATE
+          ? new Date(a.date).getTime()
           : a.dateFinished
           ? new Date(a.dateFinished).getTime()
           : Number.MAX_SAFE_INTEGER;
       bVal =
-        sortKey === TASK_SORT_KEYS.DATE_CREATED
-          ? new Date(b.dateCreated).getTime()
+        sortKey === TASK_SORT_KEYS.DATE
+          ? new Date(b.date).getTime()
           : b.dateFinished
           ? new Date(b.dateFinished).getTime()
           : Number.MAX_SAFE_INTEGER;

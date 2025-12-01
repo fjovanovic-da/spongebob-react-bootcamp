@@ -9,7 +9,7 @@ export const ITEMS_PER_PAGE = 9;
 // Task sorting constants
 export const TASK_SORT_KEYS = {
     NAME: "name",
-    DATE_CREATED: "dateCreated",
+    DATE: "date",
     DATE_FINISHED: "dateFinished",
 } as const;
 

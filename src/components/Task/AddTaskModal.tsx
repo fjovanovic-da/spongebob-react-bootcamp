@@ -6,6 +6,7 @@ import type { AddTaskModalProps } from "../../types/task.type";
 const taskSchema = z.object({
   name: z.string().min(1, "Task name is required"),
   description: z.string().optional(),
+  date: z.string().min(1, "Date is required"),
 });
 
 type TaskFormData = z.infer<typeof taskSchema>;
@@ -18,10 +19,13 @@ function AddTaskModal({ isOpen, onClose, onSubmit }: AddTaskModalProps) {
     reset,
   } = useForm<TaskFormData>({
     resolver: zodResolver(taskSchema),
+    defaultValues: {
+      date: new Date().toISOString().split("T")[0],
+    },
   });
 
   const onSubmitForm = (data: TaskFormData) => {
-    onSubmit(data.name, data.description || "");
+    onSubmit(data.name, data.description || "", new Date(data.date));
     reset();
     onClose();
   };
@@ -65,6 +69,20 @@ function AddTaskModal({ isOpen, onClose, onSubmit }: AddTaskModalProps) {
               <span className="text-error text-sm">
                 {errors.description.message}
               </span>
+            )}
+          </div>
+          <div className="form-control">
+            <label className="label" htmlFor="task-date">
+              <span className="label-text">Date</span>
+            </label>
+            <input
+              id="task-date"
+              type="date"
+              className="input input-bordered w-full"
+              {...register("date")}
+            />
+            {errors.date && (
+              <span className="text-error text-sm">{errors.date.message}</span>
             )}
           </div>
           <div className="modal-action">
