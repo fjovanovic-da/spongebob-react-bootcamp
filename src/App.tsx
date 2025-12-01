@@ -4,8 +4,11 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import ThemeToggle from "./components/ThemeToggle";
 import { useResidents } from "./hooks/useResidents";
+import Dashboard from "./pages/Dashboard";
 import FavoritesBoard from "./pages/FavoritesBoard";
 import MenuBoard from "./pages/MenuBoard";
+import SettingsBoard from "./pages/SettingsBoard";
+import TaskBoard from "./pages/TaskBoard";
 import WelcomeBoard from "./pages/WelcomeBoard";
 import { useThemeStore } from "./stores/useThemeStore";
 
@@ -58,21 +61,24 @@ function App() {
         {/* Page content */}
         <main className="flex-1 overflow-y-auto p-6">
           <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/menu" element={<MenuBoard />} />
+            <Route path="/tasks" element={<TaskBoard />} />
+            <Route path="/settings" element={<SettingsBoard />} />
             <Route
-              path="/"
+              path="/favorites"
               element={
-                <WelcomeBoard
+                <FavoritesBoard
                   residents={residents}
                   loading={loading}
                   error={error}
                 />
               }
             />
-            <Route path="/menu" element={<MenuBoard />} />
             <Route
-              path="/favorites"
+              path="/residents"
               element={
-                <FavoritesBoard
+                <WelcomeBoard
                   residents={residents}
                   loading={loading}
                   error={error}
