@@ -59,7 +59,16 @@ function App() {
         {/* Page content */}
         <main className="flex-1 overflow-y-auto p-6">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route
+              path="/"
+              element={
+                <Dashboard
+                  meals={meals}
+                  loading={mealsLoading}
+                  error={mealsError}
+                />
+              }
+            />
             <Route
               path="/menu"
               element={

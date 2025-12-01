@@ -2,3 +2,14 @@
 @plugin "daisyui" {
   themes: cupcake --default, aqua --preferdark;
 }
+
+/* Responsive layout for favorites section - needs !important to override Tailwind's flex-col utility */
+@media (min-width: 1024px) {
+  .favorites-grid {
+    /* biome-ignore lint: Needed to override Tailwind utility class */
+    flex-direction: row !important;
+  }
+  .favorites-grid > div {
+    flex: 1;
+  }
+}

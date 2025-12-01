@@ -1,6 +1,16 @@
 import "cally";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Cell,
+  Legend,
+  Pie,
+  PieChart as RechartsPieChart,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
+import { useFavoritesStore } from "../stores/useFavoritesStore";
 import { useTaskStore } from "../stores/useTaskStore";
+import type { MenuBoardProps } from "../types";
 
 // Extend JSX to include cally web components
 declare module "react" {
@@ -30,8 +40,126 @@ declare module "react" {
   }
 }
 
-function Dashboard() {
+// Pie chart colors
+const CHART_COLORS = [
+  "#FF6384", // pink
+  "#36A2EB", // blue
+  "#FFCE56", // yellow
+  "#4BC0C0", // teal
+  "#9966FF", // purple
+  "#FF9F40", // orange
+  "#7CFC00", // lawn green
+  "#DC143C", // crimson
+  "#00CED1", // dark turquoise
+  "#FFD700", // gold
+];
+
+interface ChartData {
+  name: string;
+  value: number;
+  [key: string]: string | number;
+}
+
+interface FavoritePieChartProps {
+  data: ChartData[];
+  title: string;
+}
+
+function FavoritesPieChart({ data, title }: FavoritePieChartProps) {
+  if (data.length === 0) {
+    return (
+      <div className="flex flex-col items-center">
+        <h3 className="font-semibold mb-4">{title}</h3>
+        <div
+          className="flex items-center justify-center rounded-full bg-base-300"
+          style={{ width: 200, height: 200 }}
+        >
+          <span className="text-base-content/60 text-sm">No data</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center w-full min-w-0">
+      <h3 className="font-semibold mb-4">{title}</h3>
+      <div style={{ width: "100%", height: 300 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <RechartsPieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="40%"
+              outerRadius={70}
+              dataKey="value"
+              label={({ percent }) => `${((percent ?? 0) * 100).toFixed(0)}%`}
+              labelLine={false}
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={entry.name}
+                  fill={CHART_COLORS[index % CHART_COLORS.length]}
+                />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend
+              layout="horizontal"
+              verticalAlign="bottom"
+              align="center"
+              formatter={(value) => (
+                <span style={{ color: "inherit" }}>{value}</span>
+              )}
+            />
+          </RechartsPieChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
+
+function Dashboard({ meals, loading, error }: MenuBoardProps) {
   const tasks = useTaskStore((state) => state.tasks);
+  const favorites = useFavoritesStore((state) => state.favorites);
+
+  // Get favorite meals
+  const favoriteMeals = useMemo(() => {
+    return meals.filter((meal) => favorites.includes(meal.id));
+  }, [meals, favorites]);
+
+  // Calculate category distribution for favorites
+  const categoryData = useMemo((): ChartData[] => {
+    if (favoriteMeals.length === 0) return [];
+
+    const categoryCount: Record<string, number> = {};
+    for (const meal of favoriteMeals) {
+      categoryCount[meal.category] = (categoryCount[meal.category] || 0) + 1;
+    }
+
+    return Object.entries(categoryCount)
+      .map(([name, value]) => ({
+        name,
+        value,
+      }))
+      .sort((a, b) => b.value - a.value);
+  }, [favoriteMeals]);
+
+  // Calculate origin distribution for favorites
+  const originData = useMemo((): ChartData[] => {
+    if (favoriteMeals.length === 0) return [];
+
+    const originCount: Record<string, number> = {};
+    for (const meal of favoriteMeals) {
+      originCount[meal.origin] = (originCount[meal.origin] || 0) + 1;
+    }
+
+    return Object.entries(originCount)
+      .map(([name, value]) => ({
+        name,
+        value,
+      }))
+      .sort((a, b) => b.value - a.value);
+  }, [favoriteMeals]);
   const calendarRef = useRef<HTMLElement>(null);
 
   // State for selected date (default to today)
@@ -225,7 +353,7 @@ function Dashboard() {
       </div>
 
       {/* Task Summary Section */}
-      <div className="card bg-base-100 shadow-xl">
+      <div className="card bg-base-100 shadow-xl mb-8">
         <div className="card-body">
           <h2 className="card-title mb-4">📊 Task Summary</h2>
           <div className="stats stats-vertical lg:stats-horizontal shadow w-full">
@@ -246,6 +374,81 @@ function Dashboard() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Favorites Section */}
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body">
+          <h2 className="card-title mb-4">❤️ Favorite Meals</h2>
+
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <span className="loading loading-spinner loading-lg" />
+            </div>
+          ) : error ? (
+            <div className="alert alert-error">
+              <span>{error}</span>
+            </div>
+          ) : favoriteMeals.length > 0 ? (
+            <div
+              className="flex flex-col gap-8 favorites-grid"
+              style={{ overflow: "visible" }}
+            >
+              {/* Favorite Count Stat */}
+              <div className="flex justify-center items-center">
+                <div className="stats shadow">
+                  <div className="stat">
+                    <div className="stat-figure text-secondary">
+                      <span className="text-3xl">❤️</span>
+                    </div>
+                    <div className="stat-title">Favorite Meals</div>
+                    <div className="stat-value text-secondary">
+                      {favoriteMeals.length}
+                    </div>
+                    <div className="stat-desc">
+                      out of {meals.length} total meals
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pie Charts */}
+              <div
+                className="flex justify-center"
+                style={{ overflow: "visible" }}
+              >
+                <FavoritesPieChart data={categoryData} title="By Category" />
+              </div>
+              <div
+                className="flex justify-center"
+                style={{ overflow: "visible" }}
+              >
+                <FavoritesPieChart data={originData} title="By Origin" />
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-6">
+              <div className="stats shadow">
+                <div className="stat">
+                  <div className="stat-figure text-secondary">
+                    <span className="text-3xl">❤️</span>
+                  </div>
+                  <div className="stat-title">Favorite Meals</div>
+                  <div className="stat-value text-secondary">0</div>
+                  <div className="stat-desc">
+                    out of {meals.length} total meals
+                  </div>
+                </div>
+              </div>
+              <div className="text-center py-4">
+                <div className="text-4xl mb-2">💔</div>
+                <p className="text-base-content/60">
+                  No favorite meals yet. Add some from the Menu!
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
