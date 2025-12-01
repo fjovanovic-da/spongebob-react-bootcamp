@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import ThemeToggle from "./components/ThemeToggle";
+import { useMeals } from "./hooks/useMeals";
 import { useResidents } from "./hooks/useResidents";
 import Dashboard from "./pages/Dashboard";
 import FavoritesBoard from "./pages/FavoritesBoard";
@@ -15,6 +16,7 @@ import { useThemeStore } from "./stores/useThemeStore";
 function App() {
   const theme = useThemeStore((state) => state.theme);
   const { residents, loading, error } = useResidents();
+  const { meals, loading: mealsLoading, error: mealsError } = useMeals();
 
   // Apply theme to html element
   useEffect(() => {
@@ -62,16 +64,25 @@ function App() {
         <main className="flex-1 overflow-y-auto p-6">
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/menu" element={<MenuBoard />} />
+            <Route
+              path="/menu"
+              element={
+                <MenuBoard
+                  meals={meals}
+                  loading={mealsLoading}
+                  error={mealsError}
+                />
+              }
+            />
             <Route path="/tasks" element={<TaskBoard />} />
             <Route path="/settings" element={<SettingsBoard />} />
             <Route
               path="/favorites"
               element={
                 <FavoritesBoard
-                  residents={residents}
-                  loading={loading}
-                  error={error}
+                  meals={meals}
+                  loading={mealsLoading}
+                  error={mealsError}
                 />
               }
             />

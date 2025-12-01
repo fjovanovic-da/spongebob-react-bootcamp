@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ITEMS_PER_PAGE } from "../../config";
-import { useFavoritesStore } from "../../stores/useFavoritesStore";
 import type { ResidentListProps } from "../../types";
 import Pagination from "../Pagination";
 import ResidentCard from "./ResidentCard";
@@ -10,9 +9,7 @@ function ResidentList({
   loading,
   error,
   emptyMessage = "No residents found matching your filters.",
-  showFavoriteCount = false,
 }: ResidentListProps) {
-  const { toggleFavorite, isFavorite, favoriteCount } = useFavoritesStore();
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate pagination
@@ -72,12 +69,6 @@ function ResidentList({
   // Show residents grid when data is loaded and no error
   return (
     <>
-      {showFavoriteCount && favoriteCount > 0 && (
-        <div className="w-full bg-accent text-primary-content py-3 px-4 mb-8 rounded text-center font-semibold">
-          You have {favoriteCount} favorite
-          {favoriteCount > 1 ? "s" : ""}! ⭐
-        </div>
-      )}
       <div
         className="mb-8 min-h-[300px]"
         style={{
@@ -88,12 +79,7 @@ function ResidentList({
       >
         {residents.length > 0 ? (
           currentResidents.map((resident) => (
-            <ResidentCard
-              key={resident.id}
-              resident={resident}
-              onFavorite={toggleFavorite}
-              isFavorite={isFavorite(resident.id)}
-            />
+            <ResidentCard key={resident.id} resident={resident} />
           ))
         ) : (
           <div className="col-span-full text-center text-lg py-8 text-base-content">

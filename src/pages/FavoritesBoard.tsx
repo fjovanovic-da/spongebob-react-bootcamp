@@ -1,26 +1,28 @@
-import ResidentFilter from "../components/Resident/ResidentFilter";
-import ResidentList from "../components/Resident/ResidentList";
-import { useResidentFilter } from "../hooks/useResidentFilter";
+import MealFilter from "../components/Meal/MealFilter";
+import MealList from "../components/Meal/MealList";
+import { useMealFilter } from "../hooks/useMealFilter";
 import { useFavoritesStore } from "../stores/useFavoritesStore";
 import type { FavoritesBoardProps } from "../types";
 
-function FavoritesBoard({ residents, loading, error }: FavoritesBoardProps) {
+function FavoritesBoard({ meals, loading, error }: FavoritesBoardProps) {
   // Use the Zustand favorites store
   const { favoriteCount, favorites } = useFavoritesStore();
 
-  // Filter residents to only show favorites
-  const favoriteResidents = residents.filter((resident) =>
-    favorites.includes(resident.id)
-  );
+  // Filter meals to only show favorites
+  const favoriteMeals = meals.filter((meal) => favorites.includes(meal.id));
 
-  // Use the custom filter hook on favorite residents
+  // Use the custom filter hook on favorite meals
   const {
-    filteredResidents,
+    filteredMeals,
     searchText,
-    roleFilter,
+    categoryFilter,
+    originFilter,
     setSearchText,
-    setRoleFilter,
-  } = useResidentFilter(favoriteResidents);
+    setCategoryFilter,
+    setOriginFilter,
+    availableCategories,
+    availableOrigins,
+  } = useMealFilter(favoriteMeals);
 
   // Style classes
   const containerClasses =
@@ -32,15 +34,19 @@ function FavoritesBoard({ residents, loading, error }: FavoritesBoardProps) {
   return (
     <div className={containerClasses}>
       <h1 className={headingClasses}>Your Favorites ⭐</h1>
-      <p className={subtitleClasses}>Here are your favorites:</p>
+      <p className={subtitleClasses}>Here are your favorite meals:</p>
 
       {/* Filter controls - only show if there are favorites */}
       {favoriteCount > 0 && (
-        <ResidentFilter
+        <MealFilter
           searchText={searchText}
-          roleFilter={roleFilter}
+          categoryFilter={categoryFilter}
+          originFilter={originFilter}
           onSearchChange={setSearchText}
-          onRoleChange={setRoleFilter}
+          onCategoryChange={setCategoryFilter}
+          onOriginChange={setOriginFilter}
+          availableCategories={availableCategories}
+          availableOrigins={availableOrigins}
         />
       )}
 
@@ -51,12 +57,12 @@ function FavoritesBoard({ residents, loading, error }: FavoritesBoardProps) {
             No favorites yet!
           </h2>
           <p className="text-lg text-base-content">
-            Start adding residents to your favorites from the home page.
+            Start adding meals to your favorites from the menu page.
           </p>
         </div>
       ) : (
-        <ResidentList
-          residents={filteredResidents}
+        <MealList
+          meals={filteredMeals}
           loading={loading}
           error={error}
           emptyMessage="No favorites found matching your filters."

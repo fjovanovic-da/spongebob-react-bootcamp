@@ -37,7 +37,6 @@ function WelcomeBoard({ residents, loading, error }: WelcomeBoardProps) {
         loading={loading}
         error={error}
         emptyMessage="No residents found matching your filters."
-        showFavoriteCount={true}
       />
     </div>
   );

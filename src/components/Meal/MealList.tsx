@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ITEMS_PER_PAGE } from "../../config";
+import { useFavoritesStore } from "../../stores/useFavoritesStore";
 import type { MealListProps } from "../../types";
 import Pagination from "../Pagination";
 import MealCard from "./MealCard";
@@ -9,7 +10,9 @@ function MealList({
   loading,
   error,
   emptyMessage = "No meals found.",
+  showFavoriteCount = false,
 }: MealListProps) {
+  const { toggleFavorite, isFavorite, favoriteCount } = useFavoritesStore();
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate pagination
@@ -68,6 +71,12 @@ function MealList({
   // Show meals grid when data is loaded and no error
   return (
     <>
+      {showFavoriteCount && favoriteCount > 0 && (
+        <div className="w-full bg-accent text-primary-content py-3 px-4 mb-8 rounded text-center font-semibold">
+          You have {favoriteCount} favorite
+          {favoriteCount > 1 ? "s" : ""}! ⭐
+        </div>
+      )}
       <div
         className="mb-8 min-h-[300px]"
         style={{
@@ -77,7 +86,14 @@ function MealList({
         }}
       >
         {meals.length > 0 ? (
-          currentMeals.map((meal) => <MealCard key={meal.id} meal={meal} />)
+          currentMeals.map((meal) => (
+            <MealCard
+              key={meal.id}
+              meal={meal}
+              onFavorite={toggleFavorite}
+              isFavorite={isFavorite(meal.id)}
+            />
+          ))
         ) : (
           <div className="col-span-full text-center text-lg py-8 text-base-content">
             {emptyMessage}

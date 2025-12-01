@@ -12,8 +12,6 @@ export interface Resident {
 
 export interface ResidentCardProps {
     resident: Resident;
-    onFavorite?: (id: string) => void;
-    isFavorite?: boolean;
 }
 
 export interface UseResidentsReturn {
@@ -56,5 +54,4 @@ export interface ResidentListProps {
     loading: boolean;
     error: string | null;
     emptyMessage?: string;
-    showFavoriteCount?: boolean;
 }

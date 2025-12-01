@@ -6,10 +6,10 @@ export interface FavoritesState {
     clearFavorites: () => void;
 }
 
-import type { Resident } from './resident.type';
+import type { Meal } from './menu.type';
 
 export interface FavoritesBoardProps {
-    residents: Resident[];
+    meals: Meal[];
     loading: boolean;
     error: string | null;
 }

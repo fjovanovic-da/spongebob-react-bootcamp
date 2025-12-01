@@ -1,10 +1,9 @@
 import MealFilter from "../components/Meal/MealFilter";
 import MealList from "../components/Meal/MealList";
 import { useMealFilter } from "../hooks/useMealFilter";
-import { useMeals } from "../hooks/useMeals";
+import type { MenuBoardProps } from "../types";
 
-function MenuBoard() {
-  const { meals, loading, error } = useMeals();
+function MenuBoard({ meals, loading, error }: MenuBoardProps) {
   const {
     filteredMeals,
     searchText,
@@ -46,6 +45,7 @@ function MenuBoard() {
         loading={loading}
         error={error}
         emptyMessage="No meals found."
+        showFavoriteCount={true}
       />
     </div>
   );
