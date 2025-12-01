@@ -2,7 +2,6 @@ import "./App.css";
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import ThemeToggle from "./components/ThemeToggle";
 import { useMeals } from "./hooks/useMeals";
 import { useResidents } from "./hooks/useResidents";
 import Dashboard from "./pages/Dashboard";
@@ -54,9 +53,6 @@ function App() {
           </div>
           <div className="flex-1">
             <span className="text-lg font-bold">Bikini Bottom Portal</span>
-          </div>
-          <div className="flex-none">
-            <ThemeToggle />
           </div>
         </nav>
 
