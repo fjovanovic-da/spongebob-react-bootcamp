@@ -1,7 +1,9 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { ITEMS_PER_PAGE } from "../../config";
 import { useFavoritesStore } from "../../stores";
 import type { MealListProps } from "../../types";
+import { listVariants } from "../../utils/animations";
 import { LoadingSpinner } from "../common";
 import { ErrorIcon } from "../icons";
 import Pagination from "../Pagination";
@@ -66,29 +68,46 @@ function MealList({
           {favoriteCount > 1 ? "s" : ""}! ⭐
         </div>
       )}
-      <div
+      <motion.div
         className="mb-8 min-h-[300px]"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
           gap: "2rem",
         }}
+        variants={listVariants}
+        initial="hidden"
+        animate="visible"
+        key={currentPage}
       >
-        {meals.length > 0 ? (
-          currentMeals.map((meal) => (
-            <MealCard
-              key={meal.id}
-              meal={meal}
-              onFavorite={toggleFavorite}
-              isFavorite={isFavorite(meal.id)}
-            />
-          ))
-        ) : (
-          <div className="col-span-full text-center text-lg py-8 text-base-content">
-            {emptyMessage}
-          </div>
-        )}
-      </div>
+        <AnimatePresence mode="popLayout">
+          {meals.length > 0 ? (
+            currentMeals.map((meal, index) => (
+              <motion.div
+                key={meal.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <MealCard
+                  meal={meal}
+                  onFavorite={toggleFavorite}
+                  isFavorite={isFavorite(meal.id)}
+                />
+              </motion.div>
+            ))
+          ) : (
+            <motion.div
+              className="col-span-full text-center text-lg py-8 text-base-content"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              {emptyMessage}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
       {meals.length > 0 && (
         <Pagination

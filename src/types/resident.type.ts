@@ -18,7 +18,6 @@ export interface UseResidentsReturn {
     residents: Resident[];
     loading: boolean;
     error: string | null;
-    refetch: () => void;
 }
 
 export interface UseResidentFilterReturn {
@@ -54,4 +53,12 @@ export interface ResidentListProps {
     loading: boolean;
     error: string | null;
     emptyMessage?: string;
+}
+
+export interface ResidentsState {
+    residents: Resident[];
+    loading: boolean;
+    error: string | null;
+    hasFetched: boolean;
+    fetchResidents: (endpoint?: string) => Promise<void>;
 }

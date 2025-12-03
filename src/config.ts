@@ -4,7 +4,7 @@ export const DEFAULT_ENDPOINT = "https://jsonplaceholder.typicode.com/users";
 export const MEAL_API_ENDPOINT = "https://www.themealdb.com/api/json/v1/1/search.php";
 export const DEFAULT_TIMEOUT = 10000;
 export const MEAL_STORAGE_KEY = "meal-filters";
-export const ITEMS_PER_PAGE = 9;
+export const ITEMS_PER_PAGE = 6;
 export const TABLE_ITEMS_PER_PAGE = 10;
 
 // Task sorting constants

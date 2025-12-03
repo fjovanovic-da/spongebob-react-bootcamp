@@ -58,3 +58,11 @@ export interface MenuBoardProps {
     loading: boolean;
     error: string | null;
 }
+
+export interface MealsState {
+    meals: Meal[];
+    loading: boolean;
+    error: string | null;
+    hasFetched: boolean;
+    fetchMeals: () => Promise<void>;
+}

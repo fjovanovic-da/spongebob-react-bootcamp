@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useCallback, useMemo, useState } from "react";
 import { AddTaskModal, TaskTable } from "../components/Task";
 import {
@@ -8,6 +9,12 @@ import {
 } from "../config";
 import { useTaskStore } from "../stores";
 import type { Task } from "../types/task.type";
+import {
+  buttonHoverTap,
+  containerVariants,
+  emptyStateVariants,
+  itemVariants,
+} from "../utils/animations";
 
 function TaskBoard() {
   const { tasks, updateTask, addTask, removeTask } = useTaskStore();
@@ -109,29 +116,46 @@ function TaskBoard() {
     "text-4xl font-bold text-center mb-2 flex items-center justify-center gap-2 text-base-content";
 
   return (
-    <div className={containerClasses}>
-      <h1 className={headingClasses}>Task Board 📋</h1>
-      <div className="flex justify-end mb-4">
-        <button
+    <motion.div
+      className={containerClasses}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.h1 className={headingClasses} variants={itemVariants}>
+        Task Board 📋
+      </motion.h1>
+      <motion.div className="flex justify-end mb-4" variants={itemVariants}>
+        <motion.button
           type="button"
           className="btn btn-primary"
           onClick={handleOpenModal}
+          {...buttonHoverTap}
         >
           Add Task
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
       {sortedTasks.length === 0 ? (
-        <p className="text-center">No tasks available.</p>
+        <motion.p
+          className="text-center"
+          variants={emptyStateVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          No tasks available.
+        </motion.p>
       ) : (
-        <TaskTable
-          sortedTasks={sortedTasks}
-          sortKey={sortKey}
-          sortDirection={sortDirection}
-          onSort={handleSort}
-          onToggleFinished={handleToggleFinished}
-          onUpdateTask={handleUpdateTask}
-          onDeleteTask={handleDeleteTask}
-        />
+        <motion.div variants={itemVariants}>
+          <TaskTable
+            sortedTasks={sortedTasks}
+            sortKey={sortKey}
+            sortDirection={sortDirection}
+            onSort={handleSort}
+            onToggleFinished={handleToggleFinished}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+          />
+        </motion.div>
       )}
 
       <AddTaskModal
@@ -139,7 +163,7 @@ function TaskBoard() {
         onClose={handleCloseModal}
         onSubmit={handleAddTask}
       />
-    </div>
+    </motion.div>
   );
 }
 

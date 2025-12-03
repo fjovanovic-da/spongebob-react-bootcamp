@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { lazy, memo, Suspense, useCallback, useMemo } from "react";
 import { FAVORITES_SECTION } from "../../config";
 import type {
@@ -7,6 +8,14 @@ import type {
   FavoritesSectionProps,
   Meal,
 } from "../../types";
+import {
+  chartVariants,
+  emptyStateVariants,
+  favoriteStatVariants,
+  favoritesGridVariants,
+  pulseAnimation,
+  valueChangeAnimation,
+} from "../../utils/animations";
 import { LoadingSpinner } from "../common";
 
 // Lazy load the pie chart component since it uses recharts (large bundle)
@@ -47,20 +56,31 @@ const FavoriteStat = memo(function FavoriteStat({
   totalCount,
 }: FavoriteStatProps) {
   return (
-    <div className="flex justify-center items-center">
+    <motion.div
+      className="flex justify-center items-center"
+      variants={favoriteStatVariants}
+      initial="hidden"
+      animate="visible"
+    >
       <div className="stats shadow">
-        <div className="stat">
+        <div className="stat bg-base-300">
           <div className="stat-figure text-secondary">
             <span className="text-3xl">{FAVORITES_SECTION.EMOJI.HEART}</span>
           </div>
           <div className="stat-title">{FAVORITES_SECTION.MESSAGES.TITLE}</div>
-          <div className="stat-value text-secondary">{favoriteCount}</div>
+          <motion.div
+            className="stat-value text-error"
+            key={favoriteCount}
+            {...valueChangeAnimation}
+          >
+            {favoriteCount}
+          </motion.div>
           <div className="stat-desc">
             {FAVORITES_SECTION.MESSAGES.TOTAL_DESCRIPTION(totalCount)}
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 });
 
@@ -68,17 +88,22 @@ const EmptyFavorites = memo(function EmptyFavorites({
   totalCount,
 }: EmptyFavoritesProps) {
   return (
-    <div className="flex flex-col items-center gap-6">
+    <motion.div
+      className="flex flex-col items-center gap-6"
+      variants={emptyStateVariants}
+      initial="hidden"
+      animate="visible"
+    >
       <FavoriteStat favoriteCount={0} totalCount={totalCount} />
       <div className="text-center py-4">
-        <div className="text-4xl mb-2">
+        <motion.div className="text-4xl mb-2" {...pulseAnimation}>
           {FAVORITES_SECTION.EMOJI.BROKEN_HEART}
-        </div>
+        </motion.div>
         <p className="text-base-content/60">
           {FAVORITES_SECTION.MESSAGES.EMPTY_PROMPT}
         </p>
       </div>
-    </div>
+    </motion.div>
   );
 });
 
@@ -117,7 +142,12 @@ function FavoritesSectionComponent({
             <span>{error}</span>
           </div>
         ) : favoriteMeals.length > 0 ? (
-          <div className="flex flex-col gap-8 favorites-grid overflow-visible">
+          <motion.div
+            className="flex flex-col gap-8 favorites-grid overflow-visible"
+            variants={favoritesGridVariants}
+            initial="hidden"
+            animate="visible"
+          >
             <FavoriteStat
               favoriteCount={favoriteMeals.length}
               totalCount={meals.length}
@@ -125,14 +155,24 @@ function FavoritesSectionComponent({
 
             {/* Pie Charts - Lazy Loaded with single Suspense boundary */}
             <Suspense fallback={<ChartLoadingFallback />}>
-              <div className="flex justify-center overflow-visible">
+              <motion.div
+                className="flex justify-center overflow-visible"
+                variants={chartVariants}
+                initial="hidden"
+                animate="visible"
+              >
                 <FavoritesPieChart data={categoryData} title="By Category" />
-              </div>
-              <div className="flex justify-center overflow-visible">
+              </motion.div>
+              <motion.div
+                className="flex justify-center overflow-visible"
+                variants={chartVariants}
+                initial="hidden"
+                animate="visible"
+              >
                 <FavoritesPieChart data={originData} title="By Origin" />
-              </div>
+              </motion.div>
             </Suspense>
-          </div>
+          </motion.div>
         ) : (
           <EmptyFavorites totalCount={meals.length} />
         )}

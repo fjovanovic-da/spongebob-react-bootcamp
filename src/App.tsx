@@ -1,21 +1,12 @@
 import "./App.css";
 import { useEffect } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { MenuIcon } from "./components/icons";
 import Sidebar from "./components/Sidebar";
-import { useMeals, useResidents } from "./hooks";
-import Dashboard from "./pages/Dashboard";
-import FavoritesBoard from "./pages/FavoritesBoard";
-import MenuBoard from "./pages/MenuBoard";
-import SettingsBoard from "./pages/SettingsBoard";
-import TaskBoard from "./pages/TaskBoard";
-import WelcomeBoard from "./pages/WelcomeBoard";
 import { useThemeStore } from "./stores";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
-  const { residents, loading, error } = useResidents();
-  const { meals, loading: mealsLoading, error: mealsError } = useMeals();
 
   // Apply theme to html element
   useEffect(() => {
@@ -45,52 +36,7 @@ function App() {
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto p-6">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Dashboard
-                  meals={meals}
-                  loading={mealsLoading}
-                  error={mealsError}
-                />
-              }
-            />
-            <Route
-              path="/menu"
-              element={
-                <MenuBoard
-                  meals={meals}
-                  loading={mealsLoading}
-                  error={mealsError}
-                />
-              }
-            />
-            <Route path="/tasks" element={<TaskBoard />} />
-            <Route path="/settings" element={<SettingsBoard />} />
-            <Route
-              path="/favorites"
-              element={
-                <FavoritesBoard
-                  meals={meals}
-                  loading={mealsLoading}
-                  error={mealsError}
-                />
-              }
-            />
-            <Route
-              path="/residents"
-              element={
-                <WelcomeBoard
-                  residents={residents}
-                  loading={loading}
-                  error={error}
-                />
-              }
-            />
-            {/* Add more routes here as needed */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <Outlet />
         </main>
       </div>
 

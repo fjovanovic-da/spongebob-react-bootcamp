@@ -58,8 +58,8 @@ function FavoritesPieChartComponent({ data, title }: FavoritesPieChartProps) {
   return (
     <div className="flex flex-col items-center w-full min-w-0">
       <h3 className="font-semibold mb-4">{title}</h3>
-      <div className="chart-container">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="chart-container" style={{ minHeight: 300 }}>
+        <ResponsiveContainer width="100%" height={300}>
           <RechartsPieChart>
             <Pie
               data={data}

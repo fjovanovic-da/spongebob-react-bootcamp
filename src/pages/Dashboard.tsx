@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useCallback, useMemo, useState } from "react";
 import "../types/cally.type";
 import {
@@ -7,11 +8,12 @@ import {
   TaskSummary,
 } from "../components/Dashboard";
 import AddTaskModal from "../components/Task/AddTaskModal";
-import { useDashboardCalendar } from "../hooks";
+import { useDashboardCalendar, useMeals } from "../hooks";
 import { useFavoritesStore, useTaskStore } from "../stores";
-import type { MenuBoardProps } from "../types";
+import { containerVariants, itemVariants } from "../utils/animations";
 
-function Dashboard({ meals, loading, error }: MenuBoardProps) {
+function Dashboard() {
+  const { meals, loading, error } = useMeals();
   const tasks = useTaskStore((state) => state.tasks);
   const updateTask = useTaskStore((state) => state.updateTask);
   const addTask = useTaskStore((state) => state.addTask);
@@ -66,11 +68,21 @@ function Dashboard({ meals, loading, error }: MenuBoardProps) {
     "text-4xl font-bold text-center mb-8 flex items-center justify-center gap-2 text-base-content";
 
   return (
-    <div className={containerClasses}>
-      <h1 className={headingClasses}>📊 Dashboard</h1>
+    <motion.div
+      className={containerClasses}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.h1 className={headingClasses} variants={itemVariants}>
+        📊 Dashboard
+      </motion.h1>
 
       {/* Calendar and Selected Day Tasks - Side by Side */}
-      <div className="card bg-base-100 shadow-xl mb-8">
+      <motion.div
+        className="card bg-base-100 shadow-xl mb-8"
+        variants={itemVariants}
+      >
         <div className="card-body">
           <div className="flex flex-col dashboard-flex gap-8">
             <TaskCalendar
@@ -86,7 +98,7 @@ function Dashboard({ meals, loading, error }: MenuBoardProps) {
             />
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Add Task Modal */}
       <AddTaskModal
@@ -97,16 +109,20 @@ function Dashboard({ meals, loading, error }: MenuBoardProps) {
       />
 
       {/* Task Summary Section */}
-      <TaskSummary tasks={tasks} />
+      <motion.div variants={itemVariants}>
+        <TaskSummary tasks={tasks} />
+      </motion.div>
 
       {/* Favorites Section */}
-      <FavoritesSection
-        meals={meals}
-        favoriteMeals={favoriteMeals}
-        loading={loading}
-        error={error}
-      />
-    </div>
+      <motion.div variants={itemVariants}>
+        <FavoritesSection
+          meals={meals}
+          favoriteMeals={favoriteMeals}
+          loading={loading}
+          error={error}
+        />
+      </motion.div>
+    </motion.div>
   );
 }
 
