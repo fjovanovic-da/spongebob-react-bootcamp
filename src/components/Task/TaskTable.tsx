@@ -1,16 +1,46 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { SORT_DIRECTIONS, TASK_SORT_KEYS } from "../../config";
-import type { Task, TaskTableProps } from "../../types/task.type";
+import {
+  SORT_DIRECTIONS,
+  TABLE_ITEMS_PER_PAGE,
+  TASK_SORT_KEYS,
+} from "../../config";
+import { useMediaQuery } from "../../hooks";
+import type {
+  Task,
+  TaskTableProps,
+  TaskUpdateFormData,
+} from "../../types/task.type";
+import Pagination from "../Pagination";
+import TaskMobileCard from "./TaskMobileCard";
+import TaskTableRow from "./TaskTableRow";
 
-const taskUpdateSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  description: z.string().optional(),
-});
+const createTaskUpdateSchema = (dateFinished?: Date) =>
+  z.object({
+    name: z.string().min(1, "Name is required"),
+    description: z.string().optional(),
+    date: z
+      .string()
+      .min(1, "Date is required")
+      .refine(
+        (val) => {
+          if (!dateFinished) return true;
+          const selectedDate = new Date(val);
+          return selectedDate <= dateFinished;
+        },
+        {
+          message: "Date cannot be after the finished date",
+        }
+      ),
+  });
 
-type TaskUpdateForm = z.infer<typeof taskUpdateSchema>;
+// Helper to format Date to YYYY-MM-DD string for input[type="date"]
+const toDateInputValue = (date: Date): string => {
+  const d = new Date(date);
+  return d.toISOString().split("T")[0];
+};
 
 function TaskTable({
   sortedTasks,
@@ -22,44 +52,95 @@ function TaskTable({
   onDeleteTask,
 }: TaskTableProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const isMobile = useMediaQuery("(max-width: 767px)");
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<TaskUpdateForm>({
-    resolver: zodResolver(taskUpdateSchema),
+  } = useForm<TaskUpdateFormData>({
+    resolver: zodResolver(createTaskUpdateSchema(editingTask?.dateFinished)),
   });
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+  // Pagination calculations
+  const totalItems = sortedTasks.length;
+  const totalPages = Math.ceil(totalItems / TABLE_ITEMS_PER_PAGE);
+
+  const paginatedTasks = useMemo(() => {
+    const startIndex = (currentPage - 1) * TABLE_ITEMS_PER_PAGE;
+    const endIndex = startIndex + TABLE_ITEMS_PER_PAGE;
+    return sortedTasks.slice(startIndex, endIndex);
+  }, [sortedTasks, currentPage]);
+
+  // Reset to page 1 when tasks change significantly (e.g., filtering)
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
   }, []);
 
-  const handleEdit = (task: Task) => {
-    setEditingId(task.id);
-    reset({ name: task.name, description: task.description || "" });
-  };
+  const handleEdit = useCallback(
+    (task: Task) => {
+      setEditingId(task.id);
+      setEditingTask(task);
+      reset({
+        name: task.name,
+        description: task.description || "",
+        date: toDateInputValue(task.date),
+      });
+    },
+    [reset]
+  );
 
-  const handleSave = handleSubmit((data) => {
-    if (editingId) {
-      onUpdateTask(editingId, data);
-      setEditingId(null);
-    }
-  });
+  const handleSave = useCallback(() => {
+    handleSubmit((data) => {
+      if (editingId) {
+        onUpdateTask(editingId, {
+          name: data.name,
+          description: data.description,
+          date: new Date(data.date),
+        });
+        setEditingId(null);
+        setEditingTask(null);
+      }
+    })();
+  }, [editingId, handleSubmit, onUpdateTask]);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setEditingId(null);
-  };
+    setEditingTask(null);
+  }, []);
 
-  const handleDelete = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this task?")) {
-      onDeleteTask(id);
-    }
-  };
+  const handleDelete = useCallback(
+    (id: string) => {
+      if (window.confirm("Are you sure you want to delete this task?")) {
+        onDeleteTask(id);
+        // If we deleted the last item on the current page, go to previous page
+        if (paginatedTasks.length === 1 && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
+      }
+    },
+    [onDeleteTask, paginatedTasks.length, currentPage]
+  );
+
+  const handleSortName = useCallback(() => {
+    onSort(TASK_SORT_KEYS.NAME);
+    setCurrentPage(1);
+  }, [onSort]);
+
+  const handleSortDate = useCallback(() => {
+    onSort(TASK_SORT_KEYS.DATE);
+    setCurrentPage(1);
+  }, [onSort]);
+
+  const handleSortDateFinished = useCallback(() => {
+    onSort(TASK_SORT_KEYS.DATE_FINISHED);
+    setCurrentPage(1);
+  }, [onSort]);
+
+  const sortIndicator = sortDirection === SORT_DIRECTIONS.ASC ? "↑" : "↓";
 
   return (
     <>
@@ -67,236 +148,65 @@ function TaskTable({
         <table className="table table-zebra w-full">
           <thead>
             <tr>
-              <th
-                className="cursor-pointer"
-                onClick={() => onSort(TASK_SORT_KEYS.NAME)}
-              >
-                Name{" "}
-                {sortKey === TASK_SORT_KEYS.NAME &&
-                  (sortDirection === SORT_DIRECTIONS.ASC ? "↑" : "↓")}
+              <th className="cursor-pointer" onClick={handleSortName}>
+                Name {sortKey === TASK_SORT_KEYS.NAME && sortIndicator}
               </th>
               <th>Description</th>
-              <th
-                className="cursor-pointer"
-                onClick={() => onSort(TASK_SORT_KEYS.DATE)}
-              >
-                Date{" "}
-                {sortKey === TASK_SORT_KEYS.DATE &&
-                  (sortDirection === SORT_DIRECTIONS.ASC ? "↑" : "↓")}
+              <th className="cursor-pointer" onClick={handleSortDate}>
+                Date {sortKey === TASK_SORT_KEYS.DATE && sortIndicator}
               </th>
-              <th
-                className="cursor-pointer"
-                onClick={() => onSort(TASK_SORT_KEYS.DATE_FINISHED)}
-              >
+              <th className="cursor-pointer" onClick={handleSortDateFinished}>
                 Finished{" "}
-                {sortKey === TASK_SORT_KEYS.DATE_FINISHED &&
-                  (sortDirection === SORT_DIRECTIONS.ASC ? "↑" : "↓")}
+                {sortKey === TASK_SORT_KEYS.DATE_FINISHED && sortIndicator}
               </th>
               <th>Completed</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {sortedTasks.map((task) => (
-              <tr key={task.id}>
-                <td>
-                  {editingId === task.id ? (
-                    <>
-                      <input
-                        {...register("name")}
-                        className="input input-bordered input-sm"
-                      />
-                      {errors.name && (
-                        <span className="text-error text-xs">
-                          {errors.name.message}
-                        </span>
-                      )}
-                    </>
-                  ) : (
-                    task.name
-                  )}
-                </td>
-                <td>
-                  {editingId === task.id ? (
-                    <>
-                      <input
-                        {...register("description")}
-                        className="input input-bordered input-sm"
-                      />
-                      {errors.description && (
-                        <span className="text-error text-xs">
-                          {errors.description.message}
-                        </span>
-                      )}
-                    </>
-                  ) : (
-                    task.description || ""
-                  )}
-                </td>
-                <td>{new Date(task.date).toLocaleDateString()}</td>
-                <td>
-                  {task.dateFinished
-                    ? new Date(task.dateFinished).toLocaleDateString()
-                    : "Not finished"}
-                </td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={!!task.dateFinished}
-                    onChange={(e) =>
-                      onToggleFinished(task.id, e.target.checked)
-                    }
-                  />
-                </td>
-                <td>
-                  {editingId === task.id ? (
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        className="btn btn-success btn-sm"
-                        onClick={handleSave}
-                      >
-                        Save
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-secondary btn-sm"
-                        onClick={handleCancel}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm"
-                        onClick={() => handleEdit(task)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-error btn-sm"
-                        onClick={() => handleDelete(task.id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
-              </tr>
+            {paginatedTasks.map((task) => (
+              <TaskTableRow
+                key={task.id}
+                task={task}
+                isEditing={editingId === task.id}
+                onEdit={handleEdit}
+                onSave={handleSave}
+                onCancel={handleCancel}
+                onDelete={handleDelete}
+                onToggleFinished={onToggleFinished}
+                formRegister={register}
+                formErrors={errors}
+              />
             ))}
           </tbody>
         </table>
       ) : (
         <div className="space-y-4">
-          {sortedTasks.map((task) => (
-            <div key={task.id} className="card bg-base-100 shadow-md">
-              <div className="card-body">
-                <h3 className="card-title">
-                  {editingId === task.id ? (
-                    <>
-                      <input
-                        {...register("name")}
-                        className="input input-bordered input-sm w-full"
-                        placeholder="Task Name"
-                      />
-                      {errors.name && (
-                        <span className="text-error text-xs">
-                          {errors.name.message}
-                        </span>
-                      )}
-                    </>
-                  ) : (
-                    task.name
-                  )}
-                </h3>
-                <p>
-                  {editingId === task.id ? (
-                    <>
-                      <input
-                        {...register("description")}
-                        className="input input-bordered input-sm w-full"
-                        placeholder="Description"
-                      />
-                      {errors.description && (
-                        <span className="text-error text-xs">
-                          {errors.description.message}
-                        </span>
-                      )}
-                    </>
-                  ) : (
-                    task.description || "No description"
-                  )}
-                </p>
-                <p>
-                  <strong>Date:</strong>{" "}
-                  {new Date(task.date).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Finished:</strong>{" "}
-                  {task.dateFinished
-                    ? new Date(task.dateFinished).toLocaleDateString()
-                    : "Not finished"}
-                </p>
-                <div className="form-control">
-                  <label className="label cursor-pointer">
-                    <span className="label-text">Completed</span>
-                    <input
-                      type="checkbox"
-                      checked={!!task.dateFinished}
-                      onChange={(e) =>
-                        onToggleFinished(task.id, e.target.checked)
-                      }
-                      className="checkbox"
-                    />
-                  </label>
-                </div>
-                <div className="card-actions justify-end">
-                  {editingId === task.id ? (
-                    <>
-                      <button
-                        type="button"
-                        className="btn btn-success btn-sm"
-                        onClick={handleSave}
-                      >
-                        Save
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-secondary btn-sm"
-                        onClick={handleCancel}
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm"
-                        onClick={() => handleEdit(task)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-error btn-sm"
-                        onClick={() => handleDelete(task.id)}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
+          {paginatedTasks.map((task) => (
+            <TaskMobileCard
+              key={task.id}
+              task={task}
+              isEditing={editingId === task.id}
+              onEdit={handleEdit}
+              onSave={handleSave}
+              onCancel={handleCancel}
+              onDelete={handleDelete}
+              onToggleFinished={onToggleFinished}
+              formRegister={register}
+              formErrors={errors}
+            />
           ))}
         </div>
       )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        itemsPerPage={TABLE_ITEMS_PER_PAGE}
+        totalItems={totalItems}
+      />
     </>
   );
 }
 
-export default TaskTable;
+export default memo(TaskTable);

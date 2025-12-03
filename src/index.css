@@ -13,3 +13,22 @@
     flex: 1;
   }
 }
+
+/* Dashboard chart styles */
+.overflow-visible {
+  overflow: visible;
+}
+
+.chart-container {
+  width: 100%;
+  height: 300px;
+}
+
+.chart-empty-state {
+  width: 200px;
+  height: 200px;
+}
+
+.legend-label {
+  color: inherit;
+}

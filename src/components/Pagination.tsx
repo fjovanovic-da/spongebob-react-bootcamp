@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: using index as key for static ellipsis elements */
+import { memo, useCallback, useMemo } from "react";
 import type { PaginationProps } from "../types";
 
 function Pagination({
@@ -8,12 +9,7 @@ function Pagination({
   itemsPerPage,
   totalItems,
 }: PaginationProps) {
-  if (totalPages <= 1) return null;
-
-  const startItem = (currentPage - 1) * itemsPerPage + 1;
-  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-
-  const getPageNumbers = () => {
+  const pageNumbers = useMemo(() => {
     const pages: (number | string)[] = [];
     const maxVisible = 5;
 
@@ -46,7 +42,20 @@ function Pagination({
     }
 
     return pages;
-  };
+  }, [currentPage, totalPages]);
+
+  const handlePrevious = useCallback(() => {
+    onPageChange(currentPage - 1);
+  }, [onPageChange, currentPage]);
+
+  const handleNext = useCallback(() => {
+    onPageChange(currentPage + 1);
+  }, [onPageChange, currentPage]);
+
+  if (totalPages <= 1) return null;
+
+  const startItem = (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
   return (
     <div className="flex flex-col items-center gap-4 mt-8 mb-4">
@@ -62,13 +71,13 @@ function Pagination({
         <button
           type="button"
           className="join-item btn btn-sm btn-primary hover:btn-secondary"
-          onClick={() => onPageChange(currentPage - 1)}
+          onClick={handlePrevious}
           disabled={currentPage === 1}
         >
           «
         </button>
 
-        {getPageNumbers().map((page, index) => {
+        {pageNumbers.map((page, index) => {
           if (page === "...") {
             return (
               <button
@@ -100,7 +109,7 @@ function Pagination({
         <button
           type="button"
           className="join-item btn btn-sm btn-primary hover:btn-secondary"
-          onClick={() => onPageChange(currentPage + 1)}
+          onClick={handleNext}
           disabled={currentPage === totalPages}
         >
           »
@@ -110,4 +119,4 @@ function Pagination({
   );
 }
 
-export default Pagination;
+export default memo(Pagination);

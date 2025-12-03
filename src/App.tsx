@@ -1,16 +1,16 @@
 import "./App.css";
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { MenuIcon } from "./components/icons";
 import Sidebar from "./components/Sidebar";
-import { useMeals } from "./hooks/useMeals";
-import { useResidents } from "./hooks/useResidents";
+import { useMeals, useResidents } from "./hooks";
 import Dashboard from "./pages/Dashboard";
 import FavoritesBoard from "./pages/FavoritesBoard";
 import MenuBoard from "./pages/MenuBoard";
 import SettingsBoard from "./pages/SettingsBoard";
 import TaskBoard from "./pages/TaskBoard";
 import WelcomeBoard from "./pages/WelcomeBoard";
-import { useThemeStore } from "./stores/useThemeStore";
+import { useThemeStore } from "./stores";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -35,20 +35,7 @@ function App() {
               aria-label="open sidebar"
               className="btn btn-square btn-ghost"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className="inline-block h-6 w-6 stroke-current"
-              >
-                <title>Menu</title>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
+              <MenuIcon />
             </label>
           </div>
           <div className="flex-1">

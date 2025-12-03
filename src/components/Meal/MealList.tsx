@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { ITEMS_PER_PAGE } from "../../config";
-import { useFavoritesStore } from "../../stores/useFavoritesStore";
+import { useFavoritesStore } from "../../stores";
 import type { MealListProps } from "../../types";
+import { LoadingSpinner } from "../common";
+import { ErrorIcon } from "../icons";
 import Pagination from "../Pagination";
 import MealCard from "./MealCard";
 
@@ -36,7 +38,7 @@ function MealList({
   if (loading) {
     return (
       <div className="alert alert-info my-8">
-        <span className="loading loading-spinner loading-md"></span>
+        <LoadingSpinner size="md" />
         <span className="text-lg font-semibold">Loading meals... 🍔</span>
       </div>
     );
@@ -46,20 +48,7 @@ function MealList({
   if (error) {
     return (
       <div className="alert alert-error my-8">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="stroke-current shrink-0 h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <title>Error icon</title>
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
+        <ErrorIcon />
         <div>
           <div className="font-semibold">⚠️ Error: {error}</div>
           <div className="text-sm">Please try refreshing the page.</div>

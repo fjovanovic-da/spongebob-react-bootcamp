@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import type { AddTaskModalProps } from "../../types/task.type";
@@ -11,7 +12,12 @@ const taskSchema = z.object({
 
 type TaskFormData = z.infer<typeof taskSchema>;
 
-function AddTaskModal({ isOpen, onClose, onSubmit }: AddTaskModalProps) {
+function AddTaskModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  defaultDate,
+}: AddTaskModalProps) {
   const {
     register,
     handleSubmit,
@@ -20,9 +26,20 @@ function AddTaskModal({ isOpen, onClose, onSubmit }: AddTaskModalProps) {
   } = useForm<TaskFormData>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
-      date: new Date().toISOString().split("T")[0],
+      date: defaultDate || new Date().toISOString().split("T")[0],
     },
   });
+
+  // Reset form with new defaultDate when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        name: "",
+        description: "",
+        date: defaultDate || new Date().toISOString().split("T")[0],
+      });
+    }
+  }, [isOpen, defaultDate, reset]);
 
   const onSubmitForm = (data: TaskFormData) => {
     onSubmit(data.name, data.description || "", new Date(data.date));

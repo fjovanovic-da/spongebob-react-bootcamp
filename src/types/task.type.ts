@@ -1,3 +1,4 @@
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { SortDirection, TaskSortKey } from "../config";
 
 export interface Task {
@@ -37,4 +38,27 @@ export interface AddTaskModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (name: string, description: string, date: Date) => void;
+    defaultDate?: string;
+}
+
+export interface TaskSummaryProps {
+    tasks: Task[];
+}
+
+export interface TaskUpdateFormData {
+    name: string;
+    description?: string;
+    date: string;
+}
+
+export interface TaskTableRowProps {
+    task: Task;
+    isEditing: boolean;
+    onEdit: (task: Task) => void;
+    onSave: () => void;
+    onCancel: () => void;
+    onDelete: (id: string) => void;
+    onToggleFinished: (id: string, checked: boolean) => void;
+    formRegister: UseFormRegister<TaskUpdateFormData>;
+    formErrors: FieldErrors<TaskUpdateFormData>;
 }

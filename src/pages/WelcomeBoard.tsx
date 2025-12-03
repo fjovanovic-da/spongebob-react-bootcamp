@@ -1,6 +1,5 @@
-import ResidentFilter from "../components/Resident/ResidentFilter";
-import ResidentList from "../components/Resident/ResidentList";
-import { useResidentFilter } from "../hooks/useResidentFilter";
+import { ResidentFilter, ResidentList } from "../components/Resident";
+import { useResidentFilter } from "../hooks";
 import type { WelcomeBoardProps } from "../types";
 
 function WelcomeBoard({ residents, loading, error }: WelcomeBoardProps) {

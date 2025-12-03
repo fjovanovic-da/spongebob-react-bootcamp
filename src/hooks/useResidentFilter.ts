@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useFilterStore } from "../stores/useFilterStore";
+import { useFilterStore } from "../stores";
 import type { Resident, UseResidentFilterReturn } from "../types";
 import { useDebounce } from "./useDebounce";
 

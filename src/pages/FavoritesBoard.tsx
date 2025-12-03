@@ -1,7 +1,6 @@
-import MealFilter from "../components/Meal/MealFilter";
-import MealList from "../components/Meal/MealList";
-import { useMealFilter } from "../hooks/useMealFilter";
-import { useFavoritesStore } from "../stores/useFavoritesStore";
+import { MealFilter, MealList } from "../components/Meal";
+import { useMealFilter } from "../hooks";
+import { useFavoritesStore } from "../stores";
 import type { FavoritesBoardProps } from "../types";
 
 function FavoritesBoard({ meals, loading, error }: FavoritesBoardProps) {

@@ -1,6 +1,5 @@
-import MealFilter from "../components/Meal/MealFilter";
-import MealList from "../components/Meal/MealList";
-import { useMealFilter } from "../hooks/useMealFilter";
+import { MealFilter, MealList } from "../components/Meal";
+import { useMealFilter } from "../hooks";
 import type { MenuBoardProps } from "../types";
 
 function MenuBoard({ meals, loading, error }: MenuBoardProps) {
