@@ -1,0 +1,8 @@
+pre-commit:
+  parallel: true
+  commands:
+    biome-lint:
+      run: npm run lint
+    biome-format:
+      run: npm run format
+      stage_fixed: true
