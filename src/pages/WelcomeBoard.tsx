@@ -1,9 +1,10 @@
-import ResidentFilter from "../components/Resident/ResidentFilter";
-import ResidentList from "../components/Resident/ResidentList";
-import { useResidentFilter } from "../hooks/useResidentFilter";
-import type { WelcomeBoardProps } from "../types";
+import { motion } from "framer-motion";
+import { ResidentFilter, ResidentList } from "../components/Resident";
+import { useResidentFilter, useResidents } from "../hooks";
+import { containerVariants, itemVariants } from "../utils/animations";
 
-function WelcomeBoard({ residents, loading, error }: WelcomeBoardProps) {
+function WelcomeBoard() {
+  const { residents, loading, error } = useResidents();
   // Use the custom filter hook
   const {
     filteredResidents,
@@ -21,25 +22,37 @@ function WelcomeBoard({ residents, loading, error }: WelcomeBoardProps) {
   const subtitleClasses = "text-center text-lg mb-4 text-base-content";
 
   return (
-    <div className={containerClasses}>
-      <h1 className={headingClasses}>Welcome to Bikini Bottom! 🌊</h1>
-      <p className={subtitleClasses}>Meet the residents:</p>
+    <motion.div
+      className={containerClasses}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.h1 className={headingClasses} variants={itemVariants}>
+        Welcome to Bikini Bottom! 🌊
+      </motion.h1>
+      <motion.p className={subtitleClasses} variants={itemVariants}>
+        Meet the residents:
+      </motion.p>
 
-      <ResidentFilter
-        searchText={searchText}
-        roleFilter={roleFilter}
-        onSearchChange={setSearchText}
-        onRoleChange={setRoleFilter}
-      />
+      <motion.div variants={itemVariants}>
+        <ResidentFilter
+          searchText={searchText}
+          roleFilter={roleFilter}
+          onSearchChange={setSearchText}
+          onRoleChange={setRoleFilter}
+        />
+      </motion.div>
 
-      <ResidentList
-        residents={filteredResidents}
-        loading={loading}
-        error={error}
-        emptyMessage="No residents found matching your filters."
-        showFavoriteCount={true}
-      />
-    </div>
+      <motion.div variants={itemVariants}>
+        <ResidentList
+          residents={filteredResidents}
+          loading={loading}
+          error={error}
+          emptyMessage="No residents found matching your filters."
+        />
+      </motion.div>
+    </motion.div>
   );
 }
 

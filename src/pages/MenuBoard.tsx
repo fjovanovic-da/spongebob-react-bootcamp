@@ -1,7 +1,7 @@
-import MealFilter from "../components/Meal/MealFilter";
-import MealList from "../components/Meal/MealList";
-import { useMealFilter } from "../hooks/useMealFilter";
-import { useMeals } from "../hooks/useMeals";
+import { motion } from "framer-motion";
+import { MealFilter, MealList } from "../components/Meal";
+import { useMealFilter, useMeals } from "../hooks";
+import { containerVariants, itemVariants } from "../utils/animations";
 
 function MenuBoard() {
   const { meals, loading, error } = useMeals();
@@ -24,30 +24,42 @@ function MenuBoard() {
   const subtitleClasses = "text-center text-lg mb-8 text-base-content";
 
   return (
-    <div className={containerClasses}>
-      <h1 className={headingClasses}>🍔 Krusty Krab Menu</h1>
-      <p className={subtitleClasses}>
+    <motion.div
+      className={containerClasses}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.h1 className={headingClasses} variants={itemVariants}>
+        🍔 Krusty Krab Menu
+      </motion.h1>
+      <motion.p className={subtitleClasses} variants={itemVariants}>
         Browse our delicious meals from around the world!
-      </p>
+      </motion.p>
 
-      <MealFilter
-        searchText={searchText}
-        categoryFilter={categoryFilter}
-        originFilter={originFilter}
-        onSearchChange={setSearchText}
-        onCategoryChange={setCategoryFilter}
-        onOriginChange={setOriginFilter}
-        availableCategories={availableCategories}
-        availableOrigins={availableOrigins}
-      />
+      <motion.div variants={itemVariants}>
+        <MealFilter
+          searchText={searchText}
+          categoryFilter={categoryFilter}
+          originFilter={originFilter}
+          onSearchChange={setSearchText}
+          onCategoryChange={setCategoryFilter}
+          onOriginChange={setOriginFilter}
+          availableCategories={availableCategories}
+          availableOrigins={availableOrigins}
+        />
+      </motion.div>
 
-      <MealList
-        meals={filteredMeals}
-        loading={loading}
-        error={error}
-        emptyMessage="No meals found."
-      />
-    </div>
+      <motion.div variants={itemVariants}>
+        <MealList
+          meals={filteredMeals}
+          loading={loading}
+          error={error}
+          emptyMessage="No meals found."
+          showFavoriteCount={true}
+        />
+      </motion.div>
+    </motion.div>
   );
 }
 

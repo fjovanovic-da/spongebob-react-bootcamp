@@ -6,3 +6,25 @@
 .App {
   width: 100%;
 }
+
+/* Cally calendar custom styles for days with tasks */
+calendar-month::part(has-task) {
+  --color-accent: oklch(0.65 0.2 200);
+  background-color: oklch(0.65 0.2 200 / 0.5);
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+calendar-month::part(has-task):hover {
+  background-color: oklch(0.65 0.2 200 / 0.7);
+}
+
+/* Dashboard responsive layout */
+@media (min-width: 1024px) {
+  .dashboard-flex {
+    flex-direction: row;
+  }
+  .dashboard-half {
+    width: 50%;
+  }
+}

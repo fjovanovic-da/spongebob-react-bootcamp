@@ -9,6 +9,8 @@ export interface Meal {
 
 export interface MealCardProps {
     meal: Meal;
+    onFavorite?: (id: string) => void;
+    isFavorite?: boolean;
 }
 
 export interface MealFilterState {
@@ -48,4 +50,19 @@ export interface MealListProps {
     loading: boolean;
     error: string | null;
     emptyMessage?: string;
+    showFavoriteCount?: boolean;
+}
+
+export interface MenuBoardProps {
+    meals: Meal[];
+    loading: boolean;
+    error: string | null;
+}
+
+export interface MealsState {
+    meals: Meal[];
+    loading: boolean;
+    error: string | null;
+    hasFetched: boolean;
+    fetchMeals: () => Promise<void>;
 }

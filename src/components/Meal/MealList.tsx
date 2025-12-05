@@ -1,6 +1,11 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { ITEMS_PER_PAGE } from "../../config";
+import { useFavoritesStore } from "../../stores";
 import type { MealListProps } from "../../types";
+import { listVariants } from "../../utils/animations";
+import { LoadingSpinner } from "../common";
+import { ErrorIcon } from "../icons";
 import Pagination from "../Pagination";
 import MealCard from "./MealCard";
 
@@ -9,7 +14,9 @@ function MealList({
   loading,
   error,
   emptyMessage = "No meals found.",
+  showFavoriteCount = false,
 }: MealListProps) {
+  const { toggleFavorite, isFavorite, favoriteCount } = useFavoritesStore();
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate pagination
@@ -33,7 +40,7 @@ function MealList({
   if (loading) {
     return (
       <div className="alert alert-info my-8">
-        <span className="loading loading-spinner loading-md"></span>
+        <LoadingSpinner size="md" />
         <span className="text-lg font-semibold">Loading meals... 🍔</span>
       </div>
     );
@@ -43,20 +50,7 @@ function MealList({
   if (error) {
     return (
       <div className="alert alert-error my-8">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="stroke-current shrink-0 h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <title>Error icon</title>
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
+        <ErrorIcon />
         <div>
           <div className="font-semibold">⚠️ Error: {error}</div>
           <div className="text-sm">Please try refreshing the page.</div>
@@ -68,22 +62,52 @@ function MealList({
   // Show meals grid when data is loaded and no error
   return (
     <>
-      <div
+      {showFavoriteCount && favoriteCount > 0 && (
+        <div className="w-full bg-accent text-primary-content py-3 px-4 mb-8 rounded text-center font-semibold">
+          You have {favoriteCount} favorite
+          {favoriteCount > 1 ? "s" : ""}! ⭐
+        </div>
+      )}
+      <motion.div
         className="mb-8 min-h-[300px]"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
           gap: "2rem",
         }}
+        variants={listVariants}
+        initial="hidden"
+        animate="visible"
+        key={currentPage}
       >
-        {meals.length > 0 ? (
-          currentMeals.map((meal) => <MealCard key={meal.id} meal={meal} />)
-        ) : (
-          <div className="col-span-full text-center text-lg py-8 text-base-content">
-            {emptyMessage}
-          </div>
-        )}
-      </div>
+        <AnimatePresence mode="popLayout">
+          {meals.length > 0 ? (
+            currentMeals.map((meal, index) => (
+              <motion.div
+                key={meal.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <MealCard
+                  meal={meal}
+                  onFavorite={toggleFavorite}
+                  isFavorite={isFavorite(meal.id)}
+                />
+              </motion.div>
+            ))
+          ) : (
+            <motion.div
+              className="col-span-full text-center text-lg py-8 text-base-content"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              {emptyMessage}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
       {meals.length > 0 && (
         <Pagination

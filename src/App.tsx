@@ -1,17 +1,12 @@
 import "./App.css";
 import { useEffect } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { MenuIcon } from "./components/icons";
 import Sidebar from "./components/Sidebar";
-import ThemeToggle from "./components/ThemeToggle";
-import { useResidents } from "./hooks/useResidents";
-import FavoritesBoard from "./pages/FavoritesBoard";
-import MenuBoard from "./pages/MenuBoard";
-import WelcomeBoard from "./pages/WelcomeBoard";
-import { useThemeStore } from "./stores/useThemeStore";
+import { useThemeStore } from "./stores";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
-  const { residents, loading, error } = useResidents();
 
   // Apply theme to html element
   useEffect(() => {
@@ -31,57 +26,17 @@ function App() {
               aria-label="open sidebar"
               className="btn btn-square btn-ghost"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className="inline-block h-6 w-6 stroke-current"
-              >
-                <title>Menu</title>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
+              <MenuIcon />
             </label>
           </div>
           <div className="flex-1">
             <span className="text-lg font-bold">Bikini Bottom Portal</span>
           </div>
-          <div className="flex-none">
-            <ThemeToggle />
-          </div>
         </nav>
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto p-6">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <WelcomeBoard
-                  residents={residents}
-                  loading={loading}
-                  error={error}
-                />
-              }
-            />
-            <Route path="/menu" element={<MenuBoard />} />
-            <Route
-              path="/favorites"
-              element={
-                <FavoritesBoard
-                  residents={residents}
-                  loading={loading}
-                  error={error}
-                />
-              }
-            />
-            {/* Add more routes here as needed */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <Outlet />
         </main>
       </div>
 

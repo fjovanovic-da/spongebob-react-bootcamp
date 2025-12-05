@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useMealFilterStore } from "../stores/useMealFilterStore";
+import { useMealFilterStore } from "../stores";
 import type { Meal, UseMealFilterReturn } from "../types";
 import { useDebounce } from "./useDebounce";
 

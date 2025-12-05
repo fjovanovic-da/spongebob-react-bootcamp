@@ -12,15 +12,12 @@ export interface Resident {
 
 export interface ResidentCardProps {
     resident: Resident;
-    onFavorite?: (id: string) => void;
-    isFavorite?: boolean;
 }
 
 export interface UseResidentsReturn {
     residents: Resident[];
     loading: boolean;
     error: string | null;
-    refetch: () => void;
 }
 
 export interface UseResidentFilterReturn {
@@ -56,5 +53,12 @@ export interface ResidentListProps {
     loading: boolean;
     error: string | null;
     emptyMessage?: string;
-    showFavoriteCount?: boolean;
+}
+
+export interface ResidentsState {
+    residents: Resident[];
+    loading: boolean;
+    error: string | null;
+    hasFetched: boolean;
+    fetchResidents: (endpoint?: string) => Promise<void>;
 }

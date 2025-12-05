@@ -2,3 +2,33 @@
 @plugin "daisyui" {
   themes: cupcake --default, aqua --preferdark;
 }
+
+/* Responsive layout for favorites section - needs !important to override Tailwind's flex-col utility */
+@media (min-width: 1024px) {
+  .favorites-grid {
+    /* biome-ignore lint: Needed to override Tailwind utility class */
+    flex-direction: row !important;
+  }
+  .favorites-grid > div {
+    flex: 1;
+  }
+}
+
+/* Dashboard chart styles */
+.overflow-visible {
+  overflow: visible;
+}
+
+.chart-container {
+  width: 100%;
+  height: 300px;
+}
+
+.chart-empty-state {
+  width: 200px;
+  height: 200px;
+}
+
+.legend-label {
+  color: inherit;
+}

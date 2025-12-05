@@ -1,16 +1,6 @@
 import type { ResidentCardProps } from "../../types";
 
-function ResidentCard({
-  resident,
-  onFavorite,
-  isFavorite = false,
-}: ResidentCardProps) {
-  const handleClick = () => {
-    if (onFavorite) {
-      onFavorite(resident.id);
-    }
-  };
-
+function ResidentCard({ resident }: ResidentCardProps) {
   const cardClasses =
     "card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-200 hover:-translate-y-1 border-2 border-base-300 hover:border-primary overflow-hidden rounded-2xl p-6";
   const imageContainerClasses =
@@ -48,21 +38,6 @@ function ResidentCard({
           <p className="text-base-content font-medium">🏢 {resident.company}</p>
           <p className="text-base-content text-sm">{resident.email}</p>
         </div>
-        {onFavorite && (
-          <div className="card-actions w-full mt-4">
-            <button
-              type="button"
-              onClick={handleClick}
-              className={`btn w-full h-12 rounded-lg ${
-                isFavorite
-                  ? "bg-error text-error-content hover:opacity-80"
-                  : "bg-warning text-warning-content hover:opacity-80"
-              }`}
-            >
-              {isFavorite ? "⭐ Remove from Favorites" : "☆ Add to Favorites"}
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

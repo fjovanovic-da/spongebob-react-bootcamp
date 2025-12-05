@@ -1,13 +1,25 @@
+import { motion } from "framer-motion";
 import type { MealCardProps } from "../../types";
+import { buttonHoverTap } from "../../utils/animations";
 
-function MealCard({ meal }: MealCardProps) {
+function MealCard({ meal, onFavorite, isFavorite = false }: MealCardProps) {
+  const handleClick = () => {
+    if (onFavorite) {
+      onFavorite(meal.id);
+    }
+  };
+
   const cardClasses =
-    "card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-200 hover:-translate-y-1 border-2 border-base-300 hover:border-primary overflow-hidden rounded-2xl p-6";
+    "card bg-base-100 shadow-xl transition-colors duration-200 border-2 border-base-300 hover:border-primary overflow-hidden rounded-2xl p-6";
   const imageContainerClasses =
     "w-full h-48 bg-gradient-to-br from-primary to-secondary flex items-center justify-center rounded-2xl";
 
   return (
-    <div className={cardClasses}>
+    <motion.div
+      className={cardClasses}
+      whileHover={{ y: -4, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
+      transition={{ duration: 0.2 }}
+    >
       {meal.imageUrl && (
         <figure className={`${imageContainerClasses} p-2`}>
           <img
@@ -49,8 +61,24 @@ function MealCard({ meal }: MealCardProps) {
             )}
           </div>
         </div>
+        {onFavorite && (
+          <div className="card-actions w-full mt-4">
+            <motion.button
+              type="button"
+              onClick={handleClick}
+              className={`btn w-full h-12 rounded-lg ${
+                isFavorite
+                  ? "bg-error text-error-content hover:opacity-80"
+                  : "bg-warning text-warning-content hover:opacity-80"
+              }`}
+              {...buttonHoverTap}
+            >
+              {isFavorite ? "⭐ Remove from Favorites" : "☆ Add to Favorites"}
+            </motion.button>
+          </div>
+        )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
